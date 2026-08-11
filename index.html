@@ -1,0 +1,1701 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Biematic — Geverifieerd Trading Algoritme</title>
+  <meta name="description" content="Biematic geeft je toegang tot een geverifieerd trading algoritme met 19+ maanden bewezen track record. Profit factor 4.44. Win rate 74.84%." />
+  <meta property="og:title" content="Biematic — Geverifieerd Trading Algoritme" />
+  <meta property="og:description" content="19+ maanden geverifieerd track record. Profit factor 4.44. Win rate 74.84%." />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%23070a14'/><text y='23' x='4' font-size='20' fill='%233b82f6' font-family='Arial' font-weight='900'>B</text></svg>" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.7/dist/hls.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:      #070a14;
+      --surface: rgba(255,255,255,0.025);
+      --border:  rgba(255,255,255,0.07);
+      --blue:    #3b82f6;
+      --blue-dim:rgba(59,130,246,0.12);
+      --blue-glow:rgba(59,130,246,0.25);
+      --text:    #f1f5f9;
+      --muted:   rgba(241,245,249,0.45);
+      --danger:  #f59e0b;
+      --red:     #ef4444;
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* ═══════════════════════════════
+       NAV
+    ═══════════════════════════════ */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      z-index: 200; height: 68px;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 2.5rem;
+      background: rgba(7,10,20,0.75);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+    .logo {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 1.2rem; font-weight: 800; letter-spacing: -0.02em;
+      color: var(--text); text-decoration: none;
+    }
+    .nav-links { display: flex; align-items: center; gap: 2.5rem; list-style: none; }
+    .nav-links a {
+      font-size: 0.78rem; font-weight: 600;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--muted); text-decoration: none; transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--blue); }
+    .nav-cta {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      background: var(--blue); color: #fff;
+      font-size: 0.75rem; font-weight: 700;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      padding: 0.5rem 1.25rem; border-radius: 100px;
+      text-decoration: none; transition: opacity 0.2s, transform 0.2s;
+    }
+    .nav-cta:hover { opacity: 0.85; transform: translateY(-1px); }
+    .hamburger {
+      display: none; background: none; border: none;
+      cursor: pointer; padding: 4px; flex-direction: column; gap: 5px;
+    }
+    .hamburger span { display: block; width: 22px; height: 1.5px; background: var(--text); border-radius: 2px; }
+    .mobile-overlay {
+      display: none; position: fixed; inset: 0; z-index: 190;
+      background: rgba(7,10,20,0.98);
+      flex-direction: column; align-items: center; justify-content: center; gap: 2.5rem;
+    }
+    .mobile-overlay.open { display: flex; }
+    .mobile-overlay a { font-size: 1.5rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text); text-decoration: none; }
+    .mobile-overlay a:hover { color: var(--blue); }
+    .mobile-close { position: absolute; top: 1.5rem; right: 2rem; background: none; border: none; color: var(--text); font-size: 2rem; cursor: pointer; }
+    @media (max-width: 768px) { .nav-links { display: none; } .hamburger { display: flex; } }
+
+    /* ═══════════════════════════════
+       HERO
+    ═══════════════════════════════ */
+    #hero {
+      position: relative; min-height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden; padding-top: 68px;
+    }
+
+    /* Video bg */
+    #hero-video {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      object-fit: cover; opacity: 0.45; z-index: 0;
+    }
+    #bg-canvas {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      opacity: 0.5; z-index: 0;
+    }
+
+    /* Overlays */
+    .ov-left {
+      position: absolute; inset: 0; z-index: 1; pointer-events: none;
+      background: linear-gradient(90deg, #070a14 0%, rgba(7,10,20,0.6) 50%, transparent 100%);
+    }
+    .ov-bottom {
+      position: absolute; bottom: 0; left: 0; right: 0; height: 35%;
+      z-index: 1; pointer-events: none;
+      background: linear-gradient(to top, #070a14, transparent);
+    }
+
+    /* Grid lines */
+    .grid-lines { position: absolute; inset: 0; pointer-events: none; z-index: 1; }
+    .grid-line { position: absolute; top: 0; bottom: 0; width: 1px; background: rgba(255,255,255,0.05); }
+    .grid-line:nth-child(1) { left: 25%; }
+    .grid-line:nth-child(2) { left: 50%; }
+    .grid-line:nth-child(3) { left: 75%; }
+    @media (max-width: 768px) { .grid-lines { display: none; } }
+
+    /* Glow */
+    .hero-glow { position: absolute; top: 0; left: 50%; transform: translateX(-50%); pointer-events: none; z-index: 1; width: 900px; height: 360px; }
+
+    /* Content */
+    .hero-inner {
+      position: relative; z-index: 10;
+      max-width: 820px; margin: 0 auto;
+      padding: 2rem 2rem 6rem;
+      display: flex; flex-direction: column; align-items: center; text-align: center;
+    }
+
+    /* ── 3D CARD ── */
+    .card-scene {
+      perspective: 1000px;
+      margin-bottom: 3rem;
+      cursor: pointer;
+    }
+
+    .card-3d {
+      width: 340px; height: 210px;
+      border-radius: 18px;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.08s linear;
+      animation: cardFloat 7s ease-in-out infinite;
+      background: linear-gradient(135deg, #0b1120 0%, #0f1a2e 40%, #0d1525 70%, #0a0f1e 100%);
+      box-shadow:
+        0 30px 80px rgba(0,0,0,0.6),
+        0 0 60px rgba(59,130,246,0.12),
+        inset 0 1px 0 rgba(255,255,255,0.08);
+    }
+
+    @keyframes cardFloat {
+      0%, 100% { transform: translateY(0) rotateX(4deg) rotateY(-6deg); }
+      25% { transform: translateY(-12px) rotateX(2deg) rotateY(-4deg); }
+      50% { transform: translateY(-6px) rotateX(5deg) rotateY(-8deg); }
+      75% { transform: translateY(-14px) rotateX(3deg) rotateY(-5deg); }
+    }
+
+    /* Glass border via mask */
+    .card-3d::before {
+      content: '';
+      position: absolute; inset: 0;
+      padding: 1px; border-radius: 18px;
+      background: linear-gradient(145deg, rgba(255,255,255,0.2) 0%, rgba(59,130,246,0.3) 40%, rgba(255,255,255,0.05) 100%);
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+    }
+
+    /* Holographic shimmer */
+    .card-3d::after {
+      content: '';
+      position: absolute; inset: 0; border-radius: 18px;
+      background: linear-gradient(105deg, transparent 40%, rgba(59,130,246,0.06) 50%, transparent 60%);
+      animation: shimmer 4s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    @keyframes shimmer {
+      0%, 100% { opacity: 0; transform: translateX(-100%); }
+      50% { opacity: 1; transform: translateX(100%); }
+    }
+
+    .card-inner {
+      position: absolute; inset: 0; padding: 1.5rem 1.75rem;
+      display: flex; flex-direction: column;
+      border-radius: 18px; overflow: hidden;
+    }
+
+    .card-svg {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      border-radius: 18px; overflow: hidden;
+    }
+
+    .card-top { display: flex; align-items: center; justify-content: space-between; position: relative; z-index: 2; }
+    .card-brand { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.05rem; font-weight: 800; color: rgba(241,245,249,0.9); letter-spacing: 0.06em; }
+    .card-live { display: inline-flex; align-items: center; gap: 0.3rem; font-size: 0.6rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--blue); }
+    .card-live-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--blue); animation: livepulse 2s infinite; }
+
+    .card-mid { flex: 1; display: flex; align-items: center; position: relative; z-index: 2; }
+    .card-chip {
+      width: 38px; height: 30px; border-radius: 6px;
+      background: linear-gradient(135deg, #c8a84b, #f0d070, #c8a84b);
+      box-shadow: inset 0 0 8px rgba(0,0,0,0.3);
+      position: relative;
+    }
+    .card-chip::before { content: ''; position: absolute; inset: 4px; border-radius: 3px; border: 1px solid rgba(255,255,255,0.3); }
+
+    .card-bottom { position: relative; z-index: 2; }
+    .card-stat-row { display: flex; gap: 1.5rem; }
+    .card-stat-label { font-size: 0.55rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(241,245,249,0.35); margin-bottom: 0.2rem; }
+    .card-stat-value { font-size: 1rem; font-weight: 800; letter-spacing: -0.02em; color: rgba(241,245,249,0.85); }
+    .card-stat-value.blue { color: #60a5fa; }
+
+    /* ── HERO TEXT ── */
+    .live-badge {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      background: rgba(59,130,246,0.08); border: 1px solid rgba(59,130,246,0.2);
+      border-radius: 100px; padding: 0.3rem 0.8rem;
+      font-size: 0.68rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--blue); margin-bottom: 1.25rem;
+    }
+    .live-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--blue); animation: livepulse 2s infinite; flex-shrink: 0; }
+    @keyframes livepulse { 0%,100%{opacity:1;} 50%{opacity:0.25;} }
+
+    .hero-eyebrow {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.68rem; font-weight: 700; letter-spacing: 0.16em;
+      text-transform: uppercase; color: var(--blue); margin-bottom: 1.25rem;
+    }
+
+    .hero-headline {
+      font-size: clamp(2.5rem, 6vw, 4.75rem);
+      font-weight: 900; letter-spacing: -0.04em; line-height: 1.0;
+      text-transform: uppercase; color: var(--text); margin-bottom: 1.5rem;
+    }
+    .hero-headline .period { color: var(--blue); }
+
+    .hero-desc {
+      font-size: 0.92rem; color: var(--muted);
+      max-width: 480px; line-height: 1.75; margin-bottom: 2.5rem;
+    }
+
+    .hero-btns { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; justify-content: center; }
+
+    /* ── SHINY BUTTON ── */
+    @property --gradient-angle {
+      syntax: "<angle>"; initial-value: 0deg; inherits: false;
+    }
+    @property --gradient-angle-offset {
+      syntax: "<angle>"; initial-value: 0deg; inherits: false;
+    }
+    @property --gradient-percent {
+      syntax: "<percentage>"; initial-value: 5%; inherits: false;
+    }
+    @property --gradient-shine {
+      syntax: "<color>"; initial-value: white; inherits: false;
+    }
+
+    .btn-primary {
+      --shiny-bg:             #06090f;
+      --shiny-bg-subtle:      #0d1729;
+      --shiny-highlight:      #3b82f6;
+      --shiny-highlight-sub:  #93c5fd;
+      --duration:             3s;
+      --shadow-size:          2px;
+      --ease:                 800ms cubic-bezier(0.25, 1, 0.5, 1);
+
+      isolation: isolate;
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      outline-offset: 4px;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.85rem 2rem;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.76rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      border: 1px solid transparent;
+      border-radius: 360px;
+      color: #fff;
+      text-decoration: none;
+      background:
+        linear-gradient(var(--shiny-bg), var(--shiny-bg)) padding-box,
+        conic-gradient(
+          from calc(var(--gradient-angle) - var(--gradient-angle-offset)),
+          transparent,
+          var(--shiny-highlight) var(--gradient-percent),
+          var(--gradient-shine) calc(var(--gradient-percent) * 2),
+          var(--shiny-highlight) calc(var(--gradient-percent) * 3),
+          transparent calc(var(--gradient-percent) * 4)
+        ) border-box;
+      box-shadow: inset 0 0 0 1px var(--shiny-bg-subtle);
+      transition: var(--ease);
+      transition-property: --gradient-angle-offset, --gradient-percent, --gradient-shine;
+      animation:
+        gradient-angle linear infinite var(--duration),
+        gradient-angle linear infinite calc(var(--duration) / 0.4) reverse paused;
+      animation-composition: add;
+    }
+
+    .btn-primary::before,
+    .btn-primary::after {
+      content: "";
+      pointer-events: none;
+      position: absolute;
+      inset-inline-start: 50%;
+      inset-block-start: 50%;
+      translate: -50% -50%;
+      z-index: -1;
+    }
+
+    .btn-primary:active { translate: 0 1px; }
+
+    /* Dots pattern */
+    .btn-primary::before {
+      --size: calc(100% - var(--shadow-size) * 3);
+      --pos: 2px;
+      --space: calc(var(--pos) * 2);
+      width: var(--size); height: var(--size);
+      background: radial-gradient(circle at var(--pos) var(--pos), white calc(var(--pos) / 4), transparent 0) padding-box;
+      background-size: var(--space) var(--space);
+      background-repeat: space;
+      mask-image: conic-gradient(from calc(var(--gradient-angle) + 45deg), black, transparent 10% 90%, black);
+      border-radius: inherit;
+      opacity: 0.4;
+      animation:
+        gradient-angle linear infinite var(--duration),
+        gradient-angle linear infinite calc(var(--duration) / 0.4) reverse paused;
+      animation-composition: add;
+    }
+
+    /* Inner shimmer */
+    .btn-primary::after {
+      width: 100%; aspect-ratio: 1;
+      background: linear-gradient(-50deg, transparent, var(--shiny-highlight), transparent);
+      mask-image: radial-gradient(circle at bottom, transparent 40%, black);
+      opacity: 0.6;
+      animation:
+        shiny-shimmer linear infinite var(--duration),
+        shiny-shimmer linear infinite calc(var(--duration) / 0.4) reverse paused;
+      animation-composition: add;
+    }
+
+    .btn-primary:is(:hover, :focus-visible) {
+      --gradient-percent: 20%;
+      --gradient-angle-offset: 95deg;
+      --gradient-shine: var(--shiny-highlight-sub);
+    }
+
+    .btn-primary:is(:hover, :focus-visible),
+    .btn-primary:is(:hover, :focus-visible)::before,
+    .btn-primary:is(:hover, :focus-visible)::after {
+      animation-play-state: running;
+    }
+
+    .btn-primary svg { width: 13px; height: 13px; position: relative; z-index: 1; }
+    .btn-primary span, .btn-primary > * { position: relative; z-index: 1; }
+
+    @keyframes gradient-angle { to { --gradient-angle: 360deg; } }
+    @keyframes shiny-shimmer  { to { rotate: 360deg; } }
+
+    .btn-ghost {
+      display: inline-flex; align-items: center; gap: 0.45rem;
+      background: transparent; border: 1px solid var(--border);
+      color: var(--muted); font-size: 0.76rem; font-weight: 600;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      padding: 0.85rem 1.5rem; border-radius: 100px;
+      text-decoration: none; transition: all 0.2s;
+    }
+    .btn-ghost:hover { border-color: var(--blue); color: var(--blue); }
+
+    .hero-note { margin-top: 1.25rem; font-size: 0.7rem; color: rgba(241,245,249,0.28); letter-spacing: 0.04em; }
+
+    /* Hero stats */
+    .hero-stats {
+      display: flex; justify-content: center;
+      border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+      width: 100%; max-width: 640px; margin-top: 5rem;
+    }
+    .hero-stat { flex: 1; text-align: center; padding: 1.5rem 0.75rem; border-right: 1px solid var(--border); }
+    .hero-stat:last-child { border-right: none; }
+    .hero-stat-value { font-size: 1.4rem; font-weight: 900; letter-spacing: -0.03em; color: var(--blue); line-height: 1; margin-bottom: 0.3rem; }
+    .hero-stat-label { font-size: 0.6rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; }
+
+    /* ═══════════════════════════════
+       SHARED SECTION STYLES
+    ═══════════════════════════════ */
+    section { padding: 6rem 1.5rem; }
+    .container { max-width: 980px; margin: 0 auto; }
+
+    .eyebrow {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.68rem; font-weight: 700; letter-spacing: 0.16em;
+      text-transform: uppercase; color: var(--blue); margin-bottom: 0.75rem;
+    }
+    h2 {
+      font-size: clamp(1.75rem, 3.5vw, 2.75rem); font-weight: 900;
+      letter-spacing: -0.04em; line-height: 1.1;
+      text-transform: uppercase; color: var(--text); margin-bottom: 1rem;
+    }
+    .sec-desc { font-size: 0.88rem; color: var(--muted); max-width: 500px; line-height: 1.75; margin-bottom: 3.5rem; }
+
+    /* Grid card style */
+    .grid-panel {
+      display: grid; gap: 1px;
+      background: var(--border); border: 1px solid var(--border);
+      border-radius: 16px; overflow: hidden;
+    }
+    .panel {
+      background: var(--bg); padding: 2rem 1.75rem;
+      transition: background 0.2s;
+    }
+    .panel:hover { background: rgba(59,130,246,0.03); }
+
+    /* ═══════════════════════════════
+       CHART
+    ═══════════════════════════════ */
+    #chart-section { background: var(--bg); border-top: 1px solid var(--border); }
+
+    .chart-head { display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: 1.5rem; margin-bottom: 2.5rem; }
+    .chart-tabs { display: flex; gap: 0.4rem; }
+    .chart-tab {
+      background: transparent; border: 1px solid var(--border); border-radius: 100px;
+      padding: 0.35rem 0.9rem; font-size: 0.7rem; font-weight: 600;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      color: var(--muted); cursor: pointer; transition: all 0.2s; font-family: 'Inter', sans-serif;
+    }
+    .chart-tab.active { background: var(--blue-dim); border-color: rgba(59,130,246,0.35); color: var(--blue); }
+    .chart-tab:hover:not(.active) { border-color: rgba(255,255,255,0.2); color: var(--text); }
+    .chart-wrap {
+      height: 300px; background: rgba(255,255,255,0.015);
+      border: 1px solid var(--border); border-radius: 16px; padding: 1.5rem;
+      position: relative;
+    }
+
+    /* ═══════════════════════════════
+       STATS
+    ═══════════════════════════════ */
+    #stats { background: rgba(255,255,255,0.01); border-top: 1px solid var(--border); }
+
+    .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); }
+    @media (max-width: 720px) { .stats-grid { grid-template-columns: 1fr; } }
+    .stat-card { background: var(--bg); padding: 2rem 1.75rem; border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .sc-label { font-size: 0.62rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.75rem; }
+    .sc-value { font-size: 2.25rem; font-weight: 900; letter-spacing: -0.04em; color: var(--blue); line-height: 1; margin-bottom: 0.4rem; }
+    .sc-value.neutral { color: var(--text); }
+    .sc-desc { font-size: 0.78rem; color: var(--muted); line-height: 1.5; }
+
+    .myfxbook-link {
+      display: inline-flex; align-items: center; gap: 0.6rem;
+      border: 1px solid var(--border); border-radius: 100px;
+      padding: 0.75rem 1.5rem; text-decoration: none; color: var(--muted);
+      font-size: 0.76rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;
+      transition: all 0.2s; margin-top: 2rem;
+    }
+    .myfxbook-link:hover { border-color: var(--blue); color: var(--blue); }
+
+    /* ═══════════════════════════════
+       HOE HET WERKT — broker-aware
+    ═══════════════════════════════ */
+    #how { background: var(--bg); border-top: 1px solid var(--border); }
+
+    /* broker picker inside "hoe het werkt" */
+    .how-broker-row {
+      display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 2rem;
+      align-items: center;
+    }
+    .how-broker-label { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin-right: 0.5rem; }
+    .how-broker-btn {
+      background: var(--bg); border: 1px solid var(--border);
+      border-radius: 100px; padding: 0.35rem 1rem;
+      font-size: 0.72rem; font-weight: 600; color: var(--muted);
+      cursor: pointer; transition: all 0.15s; font-family: 'Inter', sans-serif;
+    }
+    .how-broker-btn:hover { border-color: rgba(255,255,255,0.25); color: var(--text); }
+    .how-broker-btn.active { border-color: var(--blue); background: var(--blue-dim); color: var(--blue); }
+
+    .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+
+    .step { background: var(--bg); padding: 2rem 1.75rem; border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); transition: background 0.2s; }
+    .step:hover { background: rgba(59,130,246,0.03); }
+    .step-num { width: 32px; height: 32px; border-radius: 8px; background: var(--blue-dim); border: 1px solid rgba(59,130,246,0.25); color: var(--blue); font-size: 0.78rem; font-weight: 700; display: flex; align-items: center; justify-content: center; margin-bottom: 1.25rem; }
+    .step h3 { font-size: 0.88rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 0.6rem; color: var(--text); }
+    .step p { font-size: 0.82rem; color: var(--muted); line-height: 1.6; }
+    .step-link {
+      display: inline-flex; align-items: center; gap: 0.35rem;
+      margin-top: 0.85rem; font-size: 0.75rem; font-weight: 700;
+      color: var(--blue); text-decoration: none; letter-spacing: 0.04em; text-transform: uppercase;
+      border: 1px solid rgba(59,130,246,0.25); border-radius: 100px; padding: 0.35rem 0.9rem;
+      transition: all 0.2s;
+    }
+    .step-link:hover { background: var(--blue-dim); }
+    .step-link svg { width: 11px; height: 11px; }
+
+    /* ═══════════════════════════════
+       ONBOARDING
+    ═══════════════════════════════ */
+    #onboarding { background: rgba(255,255,255,0.01); border-top: 1px solid var(--border); }
+
+    .alert { display: flex; gap: 0.75rem; align-items: flex-start; border-radius: 12px; padding: 1.25rem 1.5rem; font-size: 0.82rem; line-height: 1.6; margin-bottom: 2rem; }
+    .alert.danger { background: rgba(239,68,68,0.06); border: 1px solid rgba(239,68,68,0.2); }
+    .alert.warning { background: rgba(245,158,11,0.06); border: 1px solid rgba(245,158,11,0.2); }
+
+    .ob-settings { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; margin-bottom: 2rem; }
+    .ob-setting { background: var(--bg); padding: 1.5rem; }
+    .ob-setting-label { font-size: 0.62rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.5rem; }
+    .ob-setting-value { font-size: 1.4rem; font-weight: 900; letter-spacing: -0.03em; color: var(--text); margin-bottom: 0.2rem; }
+    .ob-setting-value.blue { color: var(--blue); }
+    .ob-setting-sub { font-size: 0.72rem; color: var(--muted); }
+
+    .ob-steps { display: flex; flex-direction: column; gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; margin-bottom: 1.5rem; }
+    .ob-step { background: var(--bg); padding: 1.5rem 1.75rem; display: flex; gap: 1.25rem; align-items: flex-start; transition: background 0.2s; }
+    .ob-step:hover { background: rgba(59,130,246,0.025); }
+    .ob-num { width: 28px; height: 28px; flex-shrink: 0; border-radius: 7px; background: var(--blue-dim); border: 1px solid rgba(59,130,246,0.25); color: var(--blue); font-size: 0.75rem; font-weight: 700; display: flex; align-items: center; justify-content: center; margin-top: 0.1rem; }
+    .ob-body h3 { font-size: 0.86rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 0.35rem; color: var(--text); }
+    .ob-body p { font-size: 0.8rem; color: var(--muted); line-height: 1.65; }
+    .ob-body a { color: var(--blue); text-decoration: none; font-weight: 600; }
+    .ob-body a:hover { text-decoration: underline; }
+
+    /* ═══════════════════════════════
+       VOOR WIE
+    ═══════════════════════════════ */
+    #for-who { background: var(--bg); border-top: 1px solid var(--border); }
+    .vw-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; }
+    @media (max-width: 640px) { .vw-grid { grid-template-columns: 1fr; } }
+    .vw-card { background: var(--bg); padding: 2rem; }
+    .vw-card h3 { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 1.25rem; color: var(--text); }
+    .vw-card ul { list-style: none; display: flex; flex-direction: column; gap: 0.65rem; }
+    .vw-card ul li { font-size: 0.82rem; color: var(--muted); display: flex; align-items: flex-start; gap: 0.6rem; line-height: 1.55; }
+    .vw-card ul li::before { content: '→'; color: var(--blue); flex-shrink: 0; font-weight: 700; }
+    .vw-card.no ul li::before { content: '×'; color: var(--red); }
+
+    /* ═══════════════════════════════
+       BROKER SELECTOR
+    ═══════════════════════════════ */
+    #already { background: rgba(255,255,255,0.01); border-top: 1px solid var(--border); }
+    .broker-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 0.5rem; margin: 2rem 0; }
+    .broker-btn { background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 0.75rem; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); cursor: pointer; transition: all 0.15s; text-align: center; font-family: 'Inter', sans-serif; }
+    .broker-btn:hover { border-color: rgba(255,255,255,0.2); color: var(--text); }
+    .broker-btn.selected { border-color: var(--blue); background: var(--blue-dim); color: var(--blue); }
+    .broker-result { background: var(--bg); border: 1px solid var(--border); border-radius: 14px; padding: 1.75rem; display: none; }
+    .broker-result.visible { display: block; }
+    .broker-result h3 { font-size: 0.88rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 0.5rem; color: var(--text); }
+    .broker-result p { font-size: 0.82rem; color: var(--muted); margin-bottom: 1.25rem; line-height: 1.6; }
+
+    /* ═══════════════════════════════
+       CTA
+    ═══════════════════════════════ */
+    #cta { background: var(--bg); border-top: 1px solid var(--border); text-align: center; }
+    .cta-box { position: relative; max-width: 640px; margin: 0 auto; padding: 4rem 2rem; border: 1px solid var(--border); border-radius: 20px; background: rgba(255,255,255,0.015); overflow: hidden; }
+    .cta-box::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--blue), transparent); }
+    .cta-glow { position: absolute; top: -60px; left: 50%; transform: translateX(-50%); pointer-events: none; width: 400px; height: 180px; }
+    .cta-box h2 { margin-bottom: 1rem; }
+    .cta-box > p { color: var(--muted); font-size: 0.9rem; margin-bottom: 2rem; }
+    .contact-link { display: inline-flex; align-items: center; gap: 0.4rem; color: var(--muted); text-decoration: none; font-size: 0.8rem; margin-top: 1.5rem; transition: color 0.2s; }
+    .contact-link:hover { color: var(--blue); }
+
+    /* ═══════════════════════════════
+       UITLEG SECTIE
+    ═══════════════════════════════ */
+    #uitleg { background: rgba(255,255,255,0.01); border-top: 1px solid var(--border); }
+
+    .uitleg-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-top: 3rem; }
+
+    .uitleg-card {
+      background: var(--bg); border: 1px solid var(--border);
+      border-radius: 16px; padding: 2rem;
+      position: relative; overflow: hidden;
+    }
+    .uitleg-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, var(--blue), transparent);
+    }
+    .uitleg-icon { font-size: 2rem; margin-bottom: 1rem; display: block; }
+    .uitleg-card h3 { font-size: 1rem; font-weight: 700; color: var(--text); margin-bottom: 0.6rem; }
+    .uitleg-card p { font-size: 0.85rem; color: var(--muted); line-height: 1.7; }
+
+    .simple-flow {
+      display: flex; align-items: center; justify-content: center;
+      flex-wrap: wrap; gap: 0; margin: 3rem 0;
+      background: var(--bg); border: 1px solid var(--border); border-radius: 16px;
+      overflow: hidden;
+    }
+    .flow-step {
+      flex: 1; min-width: 140px; padding: 1.75rem 1.25rem; text-align: center;
+      border-right: 1px solid var(--border); position: relative;
+    }
+    .flow-step:last-child { border-right: none; }
+    .flow-icon { font-size: 1.75rem; margin-bottom: 0.6rem; display: block; }
+    .flow-label { font-size: 0.75rem; font-weight: 700; color: var(--text); margin-bottom: 0.25rem; }
+    .flow-sub { font-size: 0.68rem; color: var(--muted); line-height: 1.5; }
+    .flow-arrow {
+      position: absolute; right: -12px; top: 50%; transform: translateY(-50%);
+      z-index: 2; color: var(--blue); font-size: 1.2rem; font-weight: 700;
+    }
+    @media (max-width: 600px) { .flow-step { border-right: none; border-bottom: 1px solid var(--border); } .flow-arrow { display: none; } }
+
+    /* ═══════════════════════════════
+       CHECKLIST SECTIE
+    ═══════════════════════════════ */
+    #nodig { background: var(--bg); border-top: 1px solid var(--border); }
+
+    .nodig-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; margin-top: 2.5rem; }
+    @media (max-width: 720px) { .nodig-grid { grid-template-columns: 1fr; } }
+    .nodig-item { background: var(--bg); padding: 1.75rem; display: flex; gap: 1rem; align-items: flex-start; }
+    .nodig-check { width: 28px; height: 28px; border-radius: 8px; background: rgba(59,130,246,0.1); border: 1px solid rgba(59,130,246,0.3); display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 0.9rem; }
+    .nodig-body h4 { font-size: 0.88rem; font-weight: 700; color: var(--text); margin-bottom: 0.3rem; }
+    .nodig-body p { font-size: 0.8rem; color: var(--muted); line-height: 1.6; }
+
+    /* ═══════════════════════════════
+       INFO BOX (jargon uitleg)
+    ═══════════════════════════════ */
+    .info-box {
+      background: rgba(59,130,246,0.05); border: 1px solid rgba(59,130,246,0.18);
+      border-radius: 12px; padding: 1.25rem 1.5rem;
+      font-size: 0.82rem; color: var(--muted); line-height: 1.65;
+      margin: 1.5rem 0;
+      display: flex; gap: 0.75rem; align-items: flex-start;
+    }
+    .info-box strong { color: var(--blue); }
+
+    /* ═══════════════════════════════
+       FAQ
+    ═══════════════════════════════ */
+    #faq { background: rgba(255,255,255,0.01); border-top: 1px solid var(--border); }
+
+    .faq-list { display: flex; flex-direction: column; gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; margin-top: 2.5rem; }
+
+    .faq-item { background: var(--bg); }
+    .faq-q {
+      width: 100%; background: none; border: none; cursor: pointer;
+      padding: 1.5rem 1.75rem; display: flex; align-items: center; justify-content: space-between;
+      gap: 1rem; text-align: left; font-family: 'Inter', sans-serif;
+      color: var(--text); font-size: 0.9rem; font-weight: 600;
+      transition: background 0.2s;
+    }
+    .faq-q:hover { background: rgba(59,130,246,0.03); }
+    .faq-icon { color: var(--blue); font-size: 1.25rem; flex-shrink: 0; transition: transform 0.3s; }
+    .faq-item.open .faq-icon { transform: rotate(45deg); }
+    .faq-a {
+      padding: 0 1.75rem; max-height: 0; overflow: hidden;
+      transition: max-height 0.35s ease, padding 0.35s ease;
+    }
+    .faq-item.open .faq-a { max-height: 400px; padding: 0 1.75rem 1.5rem; }
+    .faq-a p { font-size: 0.84rem; color: var(--muted); line-height: 1.75; }
+    .faq-a a { color: var(--blue); text-decoration: none; font-weight: 600; }
+    .faq-a a:hover { text-decoration: underline; }
+
+    /* ═══════════════════════════════
+       DISCLAIMER + FOOTER
+    ═══════════════════════════════ */
+    #disclaimer { background: var(--bg); border-top: 1px solid var(--border); padding: 2.5rem 1.5rem; }
+    .disc-inner { max-width: 980px; margin: 0 auto; display: flex; gap: 1rem; align-items: flex-start; }
+    .disc-text { font-size: 0.74rem; color: rgba(241,245,249,0.25); line-height: 1.75; }
+    .disc-text strong { color: rgba(245,158,11,0.6); }
+
+    footer { background: var(--bg); border-top: 1px solid var(--border); padding: 2rem 2.5rem; }
+    .footer-inner { max-width: 980px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+    .footer-logo { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1rem; font-weight: 800; color: var(--text); }
+    .footer-links { display: flex; gap: 2rem; list-style: none; }
+    .footer-links a { font-size: 0.7rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); text-decoration: none; transition: color 0.2s; }
+    .footer-links a:hover { color: var(--blue); }
+    .footer-copy { font-size: 0.7rem; color: rgba(241,245,249,0.2); }
+
+    @media (max-width: 600px) {
+      .hero-stats { flex-wrap: wrap; }
+      .footer-inner { flex-direction: column; align-items: center; text-align: center; }
+      .footer-links { flex-wrap: wrap; justify-content: center; }
+      .card-3d { width: 290px; height: 178px; }
+    }
+
+    /* ═══════════════════════════════
+       TESTIMONIALS
+    ═══════════════════════════════ */
+    #testimonials { background: rgba(255,255,255,0.01); border-top: 1px solid var(--border); }
+
+    .testimonials-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 1px; background: var(--border);
+      border: 1px solid var(--border); border-radius: 16px; overflow: hidden; margin-top: 2.5rem;
+    }
+    @media (max-width: 768px) { .testimonials-grid { grid-template-columns: 1fr; } }
+
+    .testimonial { background: var(--bg); padding: 2rem; display: flex; flex-direction: column; }
+    .stars { color: #f59e0b; font-size: 0.85rem; letter-spacing: 0.15em; margin-bottom: 1rem; }
+    .testimonial-text {
+      font-size: 0.88rem; color: var(--muted); line-height: 1.8;
+      flex: 1; margin-bottom: 1.5rem;
+      border-left: 2px solid rgba(59,130,246,0.3); padding-left: 1rem;
+    }
+    .testimonial-author { font-size: 0.82rem; font-weight: 700; color: var(--text); margin-bottom: 0.2rem; }
+    .testimonial-role { font-size: 0.72rem; color: var(--muted); }
+
+    /* ═══════════════════════════════
+       MOBILE STICKY CTA
+    ═══════════════════════════════ */
+    .sticky-cta {
+      display: none;
+      position: fixed; bottom: 0; left: 0; right: 0; z-index: 150;
+      padding: 0.85rem 1.25rem;
+      background: rgba(7,10,20,0.96);
+      backdrop-filter: blur(20px);
+      border-top: 1px solid var(--border);
+      gap: 0.75rem; align-items: center;
+    }
+    .sticky-cta-text { font-size: 0.78rem; color: var(--muted); flex: 1; }
+    .sticky-cta-text strong { color: var(--text); display: block; font-size: 0.82rem; }
+    @media (max-width: 768px) { .sticky-cta { display: flex; } }
+
+    /* ═══════════════════════════════
+       FOOTER UPDATE
+    ═══════════════════════════════ */
+    .footer-desc { font-size: 0.75rem; color: rgba(241,245,249,0.3); margin-top: 0.3rem; max-width: 220px; line-height: 1.5; }
+    .footer-contact { font-size: 0.72rem; color: var(--muted); text-decoration: none; display: block; margin-top: 0.25rem; }
+    .footer-contact:hover { color: var(--blue); }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="#" class="logo">Biematic</a>
+    <ul class="nav-links">
+      <li><a href="#uitleg">Hoe werkt het?</a></li>
+      <li><a href="#stats">Resultaten</a></li>
+      <li><a href="#onboarding">Stap voor stap</a></li>
+      <li><a href="#faq">FAQ</a></li>
+    </ul>
+    <div style="display:flex;align-items:center;gap:1rem;">
+      <a href="https://go.wealthwaveaffiliation.com/visit/?bta=35157&brand=vantagefx" class="nav-cta" target="_blank" rel="noopener">
+        Start nu
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
+      <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+    </div>
+  </nav>
+
+  <!-- MOBIEL -->
+  <div class="mobile-overlay" id="mobile-overlay">
+    <button class="mobile-close" id="mobile-close">×</button>
+    <a href="#stats" onclick="closeMobile()">Resultaten</a>
+    <a href="#how" onclick="closeMobile()">Hoe het werkt</a>
+    <a href="#onboarding" onclick="closeMobile()">Installatie</a>
+    <a href="#for-who" onclick="closeMobile()">Voor wie</a>
+    <a href="https://go.wealthwaveaffiliation.com/visit/?bta=35157&brand=vantagefx" class="btn-primary" target="_blank" rel="noopener" onclick="closeMobile()">Start nu</a>
+  </div>
+
+  <!-- HERO -->
+  <section id="hero">
+
+    <!-- HLS Video background -->
+    <video id="hero-video" autoplay muted loop playsinline></video>
+    <!-- Canvas fallback -->
+    <canvas id="bg-canvas"></canvas>
+
+    <div class="ov-left"></div>
+    <div class="ov-bottom"></div>
+
+    <div class="grid-lines">
+      <div class="grid-line"></div>
+      <div class="grid-line"></div>
+      <div class="grid-line"></div>
+    </div>
+
+    <svg class="hero-glow" viewBox="0 0 900 360" fill="none">
+      <defs>
+        <filter id="hglow" x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur stdDeviation="40"/>
+        </filter>
+      </defs>
+      <ellipse cx="450" cy="90" rx="380" ry="90" fill="#3b82f6" opacity="0.08" filter="url(#hglow)"/>
+    </svg>
+
+    <div class="hero-inner">
+
+      <!-- 3D Animated Card -->
+      <div class="card-scene" id="cardScene">
+        <div class="card-3d" id="card3d">
+
+          <!-- SVG glowing lines (like INFINITE card) -->
+          <svg class="card-svg" viewBox="0 0 340 210" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <filter id="lineGlow"><feGaussianBlur stdDeviation="3" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+              <radialGradient id="chipGlow" cx="28%" cy="52%" r="30%">
+                <stop offset="0%" stop-color="#3b82f6" stop-opacity="0.5"/>
+                <stop offset="100%" stop-color="#3b82f6" stop-opacity="0"/>
+              </radialGradient>
+            </defs>
+            <!-- Glow source -->
+            <ellipse cx="95" cy="110" rx="35" ry="35" fill="url(#chipGlow)"/>
+            <!-- Radiating lines -->
+            <line x1="95" y1="110" x2="340" y2="20"  stroke="#3b82f6" stroke-width="0.9" opacity="0.7" filter="url(#lineGlow)"/>
+            <line x1="95" y1="110" x2="340" y2="55"  stroke="#60a5fa" stroke-width="0.7" opacity="0.5" filter="url(#lineGlow)"/>
+            <line x1="95" y1="110" x2="340" y2="95"  stroke="#3b82f6" stroke-width="1.1" opacity="0.8" filter="url(#lineGlow)"/>
+            <line x1="95" y1="110" x2="340" y2="135" stroke="#60a5fa" stroke-width="0.6" opacity="0.45"/>
+            <line x1="95" y1="110" x2="340" y2="170" stroke="#3b82f6" stroke-width="0.8" opacity="0.55" filter="url(#lineGlow)"/>
+            <line x1="95" y1="110" x2="260" y2="210" stroke="#60a5fa" stroke-width="0.7" opacity="0.4"/>
+            <line x1="95" y1="110" x2="180" y2="210" stroke="#3b82f6" stroke-width="0.5" opacity="0.3"/>
+            <!-- Cross lines -->
+            <line x1="150" y1="0" x2="150" y2="210" stroke="rgba(59,130,246,0.07)" stroke-width="0.5"/>
+            <line x1="220" y1="0" x2="220" y2="210" stroke="rgba(59,130,246,0.05)" stroke-width="0.5"/>
+            <line x1="290" y1="0" x2="290" y2="210" stroke="rgba(59,130,246,0.04)" stroke-width="0.5"/>
+            <!-- Small chart line in bottom right -->
+            <polyline points="200,175 215,162 228,168 242,152 258,155 272,140 288,143 302,130 316,133 330,118" stroke="#3b82f6" stroke-width="1" fill="none" opacity="0.4" filter="url(#lineGlow)"/>
+            <!-- Glow dots at line ends -->
+            <circle cx="340" cy="95" r="3" fill="#3b82f6" opacity="0.9" filter="url(#lineGlow)"/>
+            <circle cx="340" cy="20" r="2" fill="#60a5fa" opacity="0.6"/>
+            <circle cx="330" cy="118" r="2.5" fill="#3b82f6" opacity="0.7" filter="url(#lineGlow)"/>
+          </svg>
+
+          <div class="card-inner">
+            <div class="card-top">
+              <div class="card-brand">BIEMATIC</div>
+              <div class="card-live">
+                <span class="card-live-dot"></span>
+                Live
+              </div>
+            </div>
+            <div class="card-mid">
+              <div class="card-chip"></div>
+            </div>
+            <div class="card-bottom">
+              <div class="card-stat-row">
+                <div>
+                  <div class="card-stat-label">Profit Factor</div>
+                  <div class="card-stat-value blue">4.44</div>
+                </div>
+                <div>
+                  <div class="card-stat-label">Win Rate</div>
+                  <div class="card-stat-value blue">74.84%</div>
+                </div>
+                <div>
+                  <div class="card-stat-label">Track Record</div>
+                  <div class="card-stat-value">19+ mo</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="live-badge">
+        <span class="live-dot"></span>
+        Live geverifieerd via Myfxbook
+      </div>
+
+      <h1 class="hero-headline">
+        Laat een algoritme<br />voor jou traden<span class="period">.</span>
+      </h1>
+
+      <p class="hero-desc">
+        Biematic geeft je toegang tot een geverifieerd trading algoritme — 26 maanden bewezen resultaten, 25 van de 26 maanden positief afgesloten. Geen verstand van trading nodig. Koppel je account en volg live mee.
+      </p>
+
+      <div class="hero-btns">
+        <a href="https://go.wealthwaveaffiliation.com/visit/?bta=35157&brand=vantagefx" class="btn-primary" target="_blank" rel="noopener">
+          Start nu
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a>
+        <a href="#stats" class="btn-ghost">Bekijk resultaten</a>
+      </div>
+
+      <p class="hero-note">Geen verborgen kosten &nbsp;·&nbsp; Resultaten live inzichtelijk &nbsp;·&nbsp; Stap voor stap begeleid</p>
+
+      <div class="hero-stats">
+        <div class="hero-stat"><div class="hero-stat-value">25/26</div><div class="hero-stat-label">Winstgevende maanden</div></div>
+        <div class="hero-stat"><div class="hero-stat-value">74.84%</div><div class="hero-stat-label">Win Rate</div></div>
+        <div class="hero-stat"><div class="hero-stat-value">+16.80%</div><div class="hero-stat-label">Beste maand</div></div>
+        <div class="hero-stat"><div class="hero-stat-value">€1K</div><div class="hero-stat-label">Min. inleg</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CHART -->
+  <section id="chart-section">
+    <div class="container">
+      <div class="chart-head">
+        <div>
+          <div class="eyebrow">Geverifieerde performance</div>
+          <h2>Maandelijkse resultaten</h2>
+          <p class="sec-desc" style="margin-bottom:0;">Elke maand positief afgesloten — geverifieerd via Myfxbook.</p>
+        </div>
+        <div class="chart-tabs">
+          <button class="chart-tab" data-year="2024">2024</button>
+          <button class="chart-tab" data-year="2025">2025</button>
+          <button class="chart-tab active" data-year="2026">2026</button>
+          <button class="chart-tab" data-year="all">Alles</button>
+        </div>
+      </div>
+      <div class="chart-wrap">
+        <canvas id="performanceChart"></canvas>
+      </div>
+    </div>
+  </section>
+
+  <!-- SIMPELE UITLEG -->
+  <section id="uitleg">
+    <div class="container">
+      <div class="eyebrow">Hoe werkt het precies?</div>
+      <h2>Uitgelegd in gewone taal</h2>
+      <p class="sec-desc">Geen jargon, geen technische termen. Hier is alles wat je moet weten voordat je begint.</p>
+
+      <!-- Simpele flow -->
+      <div class="simple-flow">
+        <div class="flow-step">
+          <span class="flow-icon">🏦</span>
+          <div class="flow-label">Jij opent een account</div>
+          <div class="flow-sub">Bij een broker (Vantage) — dit is waar je geld staat</div>
+          <span class="flow-arrow">›</span>
+        </div>
+        <div class="flow-step">
+          <span class="flow-icon">💰</span>
+          <div class="flow-label">Jij stort geld</div>
+          <div class="flow-sub">Minimaal €1.000 op je broker account</div>
+          <span class="flow-arrow">›</span>
+        </div>
+        <div class="flow-step">
+          <span class="flow-icon">🔗</span>
+          <div class="flow-label">Koppeling instellen</div>
+          <div class="flow-sub">Via MetaCopier verbind je het algoritme aan jouw account</div>
+          <span class="flow-arrow">›</span>
+        </div>
+        <div class="flow-step">
+          <span class="flow-icon">🤖</span>
+          <div class="flow-label">Algoritme tradt</div>
+          <div class="flow-sub">Het systeem koopt & verkoopt automatisch voor jou</div>
+          <span class="flow-arrow">›</span>
+        </div>
+        <div class="flow-step">
+          <span class="flow-icon">📱</span>
+          <div class="flow-label">Jij volgt live</div>
+          <div class="flow-sub">Alles inzichtelijk in de MetaTrader 5 app</div>
+        </div>
+      </div>
+
+      <div class="uitleg-grid">
+        <div class="uitleg-card">
+          <span class="uitleg-icon">🤖</span>
+          <h3>Wat is het algoritme?</h3>
+          <p>Een algoritme is een computerprogramma dat automatisch handelt op de financiële markten. Het analyseert de markt 24/7 en opent en sluit trades zonder dat jij er iets voor hoeft te doen. Jij hoeft geen verstand te hebben van trading — het systeem doet alles.</p>
+        </div>
+        <div class="uitleg-card">
+          <span class="uitleg-icon">🏦</span>
+          <h3>Wat is een broker?</h3>
+          <p>Een broker (zoals Vantage) is een bedrijf waar jij een account aanmaakt en je geld op zet. Het is de "bank" voor je trades. Jij bent altijd zelf eigenaar van je geld — je kunt het op elk moment opnemen. Biematic heeft <strong style="color:var(--text);">geen toegang</strong> tot jouw geld.</p>
+        </div>
+        <div class="uitleg-card">
+          <span class="uitleg-icon">🔗</span>
+          <h3>Wat is MetaCopier?</h3>
+          <p>MetaCopier is de digitale brug tussen het HRC ALGO algoritme en jouw broker account. Het "kopieert" automatisch alle trades van het algoritme naar jouw account. Zonder MetaCopier kan het algoritme niet op jouw account handelen.</p>
+        </div>
+        <div class="uitleg-card">
+          <span class="uitleg-icon">📊</span>
+          <h3>Wat is MetaTrader 5 (MT5)?</h3>
+          <p>MetaTrader 5 is een gratis app (beschikbaar op telefoon en computer) waarmee je al je trades live kunt volgen. Je ziet precies welke trades er zijn gedaan, wat de winst of het verlies is, en wat de stand van je account is — alles in real-time.</p>
+        </div>
+        <div class="uitleg-card">
+          <span class="uitleg-icon">📈</span>
+          <h3>Wat is Myfxbook?</h3>
+          <p>Myfxbook is een onafhankelijke website die trading resultaten verifieert en publiekelijk weergeeft. Het is niet van Biematic — het is een neutrale partij. Alle resultaten die je op Biematic ziet, zijn live te verifiëren op Myfxbook. Je kunt dit dus altijd zelf controleren.</p>
+        </div>
+        <div class="uitleg-card">
+          <span class="uitleg-icon">🛡️</span>
+          <h3>Is mijn geld veilig?</h3>
+          <p>Je geld staat op je eigen broker account bij Vantage — een gereguleerde broker. Biematic heeft <strong style="color:var(--text);">geen toegang</strong> tot jouw geld en kan er niets mee doen. Het algoritme kan alleen trades uitvoeren, niet jouw geld opnemen. Je kunt te allen tijde stoppen en je geld opnemen.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WAT HEB JE NODIG -->
+  <section id="nodig">
+    <div class="container">
+      <div class="eyebrow">Vereisten</div>
+      <h2>Wat heb je nodig om te starten?</h2>
+      <p class="sec-desc">Checklist — dit heb je nodig voordat je kunt beginnen. Meer niet.</p>
+      <div class="nodig-grid">
+        <div class="nodig-item">
+          <div class="nodig-check">💶</div>
+          <div class="nodig-body">
+            <h4>Minimaal €1.000 inleg</h4>
+            <p>Dit bedrag zet je op je broker account. Het is jouw eigen geld en jij kunt het altijd zelf opnemen. Dit is het minimum om het algoritme goed te laten werken.</p>
+          </div>
+        </div>
+        <div class="nodig-item">
+          <div class="nodig-check">📧</div>
+          <div class="nodig-body">
+            <h4>Een e-mailadres</h4>
+            <p>Om je accounts aan te maken bij Vantage en MetaCopier heb je een geldig e-mailadres nodig. Je ontvangt alle inloggegevens en bevestigingen per e-mail.</p>
+          </div>
+        </div>
+        <div class="nodig-item">
+          <div class="nodig-check">🪪</div>
+          <div class="nodig-body">
+            <h4>Identiteitsbewijs</h4>
+            <p>Vantage is een gereguleerde broker en moet bij wet je identiteit controleren. Je hebt een paspoort, ID-kaart of rijbewijs nodig. Dit is wettelijk verplicht voor alle brokers.</p>
+          </div>
+        </div>
+        <div class="nodig-item">
+          <div class="nodig-check">📱</div>
+          <div class="nodig-body">
+            <h4>Telefoon of computer</h4>
+            <p>Om de MT5 app te installeren en alles live te volgen. De app is gratis beschikbaar voor iPhone, Android, Mac en Windows.</p>
+          </div>
+        </div>
+        <div class="nodig-item">
+          <div class="nodig-check">⏱️</div>
+          <div class="nodig-body">
+            <h4>Ongeveer 30 minuten tijd</h4>
+            <p>Om je accounts aan te maken, te verifiëren en alles in te stellen. Eénmalig. Daarna doet het algoritme alles automatisch.</p>
+          </div>
+        </div>
+        <div class="nodig-item">
+          <div class="nodig-check">🧘</div>
+          <div class="nodig-body">
+            <h4>Geduld en risicobewustzijn</h4>
+            <p>Trading brengt risico's met zich mee. Investeer alleen geld dat je kunt missen en ga er niet vanuit dat iedere maand winst wordt gemaakt. Kijk eerlijk naar de resultaten op Myfxbook.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <section id="stats">
+    <div class="container">
+      <div class="eyebrow">Transparantie</div>
+      <h2>Resultaten die je zelf kunt verifiëren</h2>
+      <p class="sec-desc">Alle trades live inzichtelijk via Myfxbook. Geen marketing, geen mooipraterij.</p>
+      <div class="stats-grid grid-panel">
+        <div class="stat-card panel">
+          <div class="sc-label">Winstgevende maanden</div>
+          <div class="sc-value">25/26</div>
+          <div class="sc-desc">In 25 van de 26 maanden positief afgesloten</div>
+        </div>
+        <div class="stat-card panel">
+          <div class="sc-label">Win Rate</div>
+          <div class="sc-value">74.84%</div>
+          <div class="sc-desc">Bijna 3 van de 4 trades eindigen in winst</div>
+        </div>
+        <div class="stat-card panel">
+          <div class="sc-label">Track Record</div>
+          <div class="sc-value neutral">26+</div>
+          <div class="sc-desc">Maanden aantoonbare, geverifieerde resultaten</div>
+        </div>
+        <div class="stat-card panel">
+          <div class="sc-label">Gemiddeld per maand</div>
+          <div class="sc-value">~6.5%</div>
+          <div class="sc-desc">Gemiddelde maandelijkse winst over 26 maanden</div>
+        </div>
+        <div class="stat-card panel">
+          <div class="sc-label">Beste maand</div>
+          <div class="sc-value">+16.80%</div>
+          <div class="sc-desc">Oktober 2025 — te verifiëren op Myfxbook</div>
+        </div>
+        <div class="stat-card panel">
+          <div class="sc-label">Verificatie</div>
+          <div class="sc-value neutral">Live</div>
+          <div class="sc-desc">Alle trades publiekelijk inzichtelijk via Myfxbook — onafhankelijk platform</div>
+        </div>
+      </div>
+      <a href="https://www.myfxbook.com/members/HRC_Algo/hrc-algo/12029710" class="myfxbook-link" target="_blank" rel="noopener">
+        <span class="live-dot" style="background:var(--blue);"></span>
+        Bekijk live resultaten op Myfxbook
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+      </a>
+    </div>
+  </section>
+
+  <!-- HOE HET WERKT -->
+  <section id="how">
+    <div class="container">
+      <div class="eyebrow">Hoe het werkt</div>
+      <h2>In 4 stappen actief</h2>
+      <p class="sec-desc">Van registratie tot live trades — het hele proces duurt minder dan een dag.</p>
+
+      <!-- Broker kiezer -->
+      <div class="how-broker-row">
+        <span class="how-broker-label">Jouw broker:</span>
+        <button class="how-broker-btn active" data-broker="vantage">Vantage</button>
+        <button class="how-broker-btn" data-broker="startrader">Startrader</button>
+        <button class="how-broker-btn" data-broker="puprime">PU Prime</button>
+        <button class="how-broker-btn" data-broker="vtmarkets">VT Markets</button>
+      </div>
+
+      <div class="steps grid-panel">
+        <div class="step panel">
+          <div class="step-num">1</div>
+          <h3>Open een account bij <span id="step1-broker-name">Vantage</span></h3>
+          <p>Vantage is de broker — de plek waar jij je geld op zet. Je maakt hier een gratis account aan via de link hieronder. <strong style="color:var(--text);">Belangrijk:</strong> gebruik altijd onze link, anders wordt de koppeling met het algoritme niet correct geactiveerd.</p>
+          <a href="#" id="step1-broker-link" class="step-link" target="_blank" rel="noopener">
+            Open gratis account
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+          </a>
+        </div>
+        <div class="step panel">
+          <div class="step-num">2</div>
+          <h3>Maak een MetaCopier account</h3>
+          <p>MetaCopier is de digitale brug die het algoritme verbindt met jouw broker account. Zonder MetaCopier kan het algoritme niet voor jou traden. Ook hier geldt: gebruik de link hieronder, niet de app — anders werkt de koppeling niet.</p>
+          <a href="https://metacopier.io/?aff=luke" class="step-link" target="_blank" rel="noopener">
+            Open MetaCopier account
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+          </a>
+        </div>
+        <div class="step panel">
+          <div class="step-num">3</div>
+          <h3>Koppel het algoritme aan jouw account</h3>
+          <p>In MetaCopier zoek je de bot op met de naam <strong style="color:var(--blue);">HRC ALGO</strong> en verbind je hem met jouw Vantage account. Nadat je gestort hebt, helpen wij je hiermee. Stuur ons een e-mail en wij regelen de toegang voor je.</p>
+        </div>
+        <div class="step panel">
+          <div class="step-num">4</div>
+          <h3>Volg alles live via de MT5 app</h3>
+          <p>Download de gratis MetaTrader 5 app op je telefoon of computer. Log in met de inloggegevens die je van Vantage hebt ontvangen. Je ziet nu live alle trades die het algoritme voor jou uitvoert — inclusief winst, verlies en alles ertussen.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ONBOARDING -->
+  <section id="onboarding">
+    <div class="container">
+      <div class="eyebrow">Installatie</div>
+      <h2>Zo stel je alles in</h2>
+      <p class="sec-desc">Volg deze stappen precies op in de juiste volgorde. Vragen? Stuur ons een bericht.</p>
+
+      <div class="info-box">
+        <span>💡</span>
+        <div><strong>Waarom Vantage?</strong> Vantage is een internationaal gereguleerde broker — dit betekent dat ze aan strenge financiële regels moeten voldoen en dat jouw geld beschermd is. Bovendien is Vantage compatibel met het HRC ALGO algoritme via MetaCopier. Je kunt ook een andere broker gebruiken als je die al hebt — selecteer dan jouw broker bij "Hoe het werkt" hierboven.</div>
+      </div>
+
+      <div class="alert danger">
+        <span>🚨</span>
+        <div><strong style="color:#ef4444;">Registreer altijd via de link hieronder — NIET via de app.</strong> Registraties via de app worden niet correct gekoppeld. Alleen via de link werkt het.</div>
+      </div>
+
+      <div class="ob-settings">
+        <div class="ob-setting"><div class="ob-setting-label">Platform</div><div class="ob-setting-value">MT5</div><div class="ob-setting-sub">MetaTrader 5</div></div>
+        <div class="ob-setting"><div class="ob-setting-label">Accounttype</div><div class="ob-setting-value">RAW ECN</div><div class="ob-setting-sub">Selecteer bij registratie</div></div>
+        <div class="ob-setting"><div class="ob-setting-label">Minimale storting</div><div class="ob-setting-value blue">€1.000</div><div class="ob-setting-sub">In één volledige betaling</div></div>
+      </div>
+
+      <div class="ob-steps">
+
+        <div class="ob-step"><div class="ob-num">1</div><div class="ob-body">
+          <h3>Maak je account aan bij Vantage — via de link hieronder</h3>
+          <p>Ga naar de link en maak een gratis account aan met je e-mailadres en een wachtwoord naar keuze.<br/><br/>
+          Let op: laat het veld <strong style="color:var(--text);">"REFERRED BY"</strong> leeg. Dit is een veld dat Vantage toont — laat het gewoon leeg staan. Accepteer daarna de voorwaarden en klik op "Create Account".<br/><br/>
+          <strong style="color:#ef4444;">⚠️ Gebruik altijd de link hieronder — NIET de Vantage app. Via de app wordt de koppeling niet correct geregistreerd.</strong><br/><br/>
+          <a href="https://go.wealthwaveaffiliation.com/visit/?bta=35157&brand=vantagefx" target="_blank" rel="noopener">→ Klik hier om je Vantage account te openen</a></p>
+        </div></div>
+
+        <div class="ob-step"><div class="ob-num">2</div><div class="ob-body">
+          <h3>Controleer je inbox — je ontvangt twee e-mails van Vantage</h3>
+          <p>Direct na registratie stuurt Vantage je twee e-mails:<br/><br/>
+          • <strong style="color:var(--text);">E-mail 1:</strong> Een bevestigingslink om je e-mailadres te verifiëren — klik hierop<br/>
+          • <strong style="color:var(--text);">E-mail 2:</strong> Je inloggegevens voor MetaTrader 5 (MT5) — sla deze op, die heb je later nodig<br/><br/>
+          Niet ontvangen? Controleer je spam/ongewenste mail folder.</p>
+        </div></div>
+
+        <div class="ob-step"><div class="ob-num">3</div><div class="ob-body">
+          <h3>Verifieer je identiteit (dit is verplicht bij alle brokers)</h3>
+          <p>Log in op je Vantage account via <a href="https://go.wealthwaveaffiliation.com/visit/?bta=35157&brand=vantagefx" target="_blank" rel="noopener">de Vantage website</a> en ga naar je dashboard. Hier word je gevraagd om je identiteit te bevestigen.<br/><br/>
+          Upload een foto van:<br/>
+          • <strong style="color:var(--text);">Paspoort, ID-kaart of rijbewijs</strong> (voor- en achterkant)<br/>
+          • Zorg dat de foto scherp en goed belicht is — vage foto's leiden tot vertraging<br/><br/>
+          Verificatie duurt meestal 1-2 werkdagen. Je krijgt een e-mail zodra het klaar is.</p>
+        </div></div>
+
+        <div class="ob-step"><div class="ob-num">4</div><div class="ob-body">
+          <h3>Selecteer het juiste accounttype: RAW ECN + MT5</h3>
+          <p>Bij het aanmaken van je trading account in het Vantage dashboard moet je een accounttype kiezen. Kies altijd:<br/><br/>
+          • <strong style="color:var(--text);">Platform: MetaTrader 5 (MT5)</strong><br/>
+          • <strong style="color:var(--text);">Accounttype: RAW ECN</strong><br/><br/>
+          Dit is het type dat compatibel is met het HRC ALGO algoritme. Kies je een ander type, dan werkt de koppeling niet.</p>
+        </div></div>
+
+        <div class="ob-step"><div class="ob-num">5</div><div class="ob-body">
+          <h3>Stort minimaal €1.000 — in één volledige betaling</h3>
+          <p>Ga in je Vantage dashboard naar <strong style="color:var(--text);">"Funds"</strong> en kies een stortingsmethode (bankoverschrijving of creditcard). Stort minimaal €1.000 of $1.000.<br/><br/>
+          <strong style="color:var(--danger);">⚠️ Belangrijk: de storting moet in één keer worden gedaan. Meerdere kleinere stortingen tellen niet mee als "minimale inleg" voor het algoritme.</strong><br/><br/>
+          Maak een screenshot van de bevestiging van je storting — die heb je nodig in stap 6.</p>
+        </div></div>
+
+        <div class="ob-step"><div class="ob-num">6</div><div class="ob-body">
+          <h3>Stuur ons een e-mail — wij geven je toegang tot HRC ALGO</h3>
+          <p>Na je storting geven wij je handmatig toegang tot de HRC ALGO bot in MetaCopier. Stuur een e-mail naar ons met de volgende informatie:<br/><br/>
+          • Je <strong style="color:var(--text);">volledige naam</strong><br/>
+          • Het <strong style="color:var(--text);">e-mailadres</strong> waarmee je bij Vantage bent geregistreerd<br/>
+          • Een <strong style="color:var(--text);">screenshot van je storting</strong><br/><br/>
+          <a href="mailto:biematic@outlook.com">→ Stuur naar biematic@outlook.com</a><br/><br/>
+          Wij reageren binnen 24 uur en sturen je dan de verdere stappen voor MetaCopier inclusief een video-instructie.</p>
+        </div></div>
+
+        <div class="ob-step"><div class="ob-num">7</div><div class="ob-body">
+          <h3>Maak een MetaCopier account via de link hieronder</h3>
+          <p>MetaCopier is de service die automatisch alle trades van het HRC ALGO algoritme kopieert naar jouw Vantage account. Maak hier een account aan:<br/><br/>
+          <strong style="color:#ef4444;">⚠️ Gebruik ook hier de link, niet de MetaCopier app — anders wordt de koppeling niet correct geregistreerd.</strong><br/><br/>
+          <a href="https://metacopier.io/?aff=luke" target="_blank" rel="noopener">→ Klik hier om je MetaCopier account te openen</a></p>
+        </div></div>
+
+        <div class="ob-step"><div class="ob-num">8</div><div class="ob-body">
+          <h3>Voeg HRC ALGO toe en koppel je Vantage account</h3>
+          <p>In MetaCopier zoek je de bot op met de exacte naam <strong style="color:var(--blue);">HRC ALGO</strong>. Koppel hier je Vantage broker account aan. Nadat je toegang hebt ontvangen (via e-mail van ons), sturen wij je een video-instructie die dit stap voor stap laat zien.<br/><br/>
+          Stel de risico multiplier in op <strong style="color:var(--text);">1</strong> — dit zorgt ervoor dat de bot automatisch alle trades sluit als het verlies op je account meer dan 30% wordt. Dit is een veiligheidsinstelling — stel dit altijd in voordat het algoritme start.</p>
+        </div></div>
+
+        <div class="ob-step"><div class="ob-num">9</div><div class="ob-body">
+          <h3>Open MetaTrader 5 en volg alles live</h3>
+          <p>Download de gratis <strong style="color:var(--text);">MetaTrader 5 app</strong> op je telefoon of computer (zoek op "MT5" in de App Store of Google Play). Log in met de inloggegevens die je in stap 2 hebt ontvangen van Vantage.<br/><br/>
+          Je ziet nu alle live trades die het algoritme uitvoert op jouw account. Winst, verlies, openstaande posities — alles staat er overzichtelijk in.</p>
+        </div></div>
+
+      </div>
+
+      <div class="alert warning">
+        <span>⚠️</span>
+        <div><strong style="color:var(--danger);">Risico-instelling:</strong> Stel de risico multiplier in op <strong style="color:var(--text);">1</strong>. De bot sluit automatisch alle trades bij <strong style="color:var(--text);">-30% equity</strong>. Stel dit in vóórdat het algoritme start.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- VOOR WIE -->
+  <section id="for-who">
+    <div class="container">
+      <div class="eyebrow">Geschiktheid</div>
+      <h2>Is dit iets voor jou?</h2>
+      <p class="sec-desc">Automated trading is niet voor iedereen. Lees dit eerlijk door voordat je een beslissing maakt.</p>
+      <div class="vw-grid">
+        <div class="vw-card">
+          <h3>✓ Dit past bij jou als je…</h3>
+          <ul>
+            <li>Al breed gespreid belegt en op zoek bent naar een extra laag</li>
+            <li>Comfortabel bent met minimaal €1.000 op een broker te zetten</li>
+            <li>Begrijpt dat trading risico's met zich meebrengt</li>
+            <li>Op zoek bent naar een hogere-risico/hogere-rendement optie</li>
+            <li>Transparantie en verificatie belangrijk vindt</li>
+          </ul>
+        </div>
+        <div class="vw-card no">
+          <h3>✗ Dit is niet voor jou als je…</h3>
+          <ul>
+            <li>Verwacht gegarandeerd rendement te maken</li>
+            <li>Geld inlegt dat je niet kunt missen</li>
+            <li>Geen ervaring hebt met beleggen of risico's</li>
+            <li>Op zoek bent naar een veilige spaaroplossing</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BROKER SELECTOR -->
+  <section id="already">
+    <div class="container">
+      <div class="eyebrow">Al een account?</div>
+      <h2>Heb je al een broker-account?</h2>
+      <p class="sec-desc">Selecteer de brokers waar je al een account bij hebt. Wij zoeken de beste optie voor jou.</p>
+      <div class="broker-grid">
+        <button class="broker-btn" data-broker="vantage">Vantage</button>
+        <button class="broker-btn" data-broker="startrader">Startrader</button>
+        <button class="broker-btn" data-broker="puprime">PU Prime</button>
+        <button class="broker-btn" data-broker="vtmarkets">VT Markets</button>
+      </div>
+      <div class="broker-result" id="broker-result"></div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section id="testimonials">
+    <div class="container">
+      <div class="eyebrow">Ervaringen</div>
+      <h2>Wat anderen zeggen</h2>
+      <p class="sec-desc">Mensen die al gestart zijn — in hun eigen woorden.</p>
+
+      <div class="testimonials-grid">
+        <div class="testimonial">
+          <div class="stars">★★★★★</div>
+          <p class="testimonial-text">"Ik had totaal geen verstand van trading en eerlijk gezegd ook wat twijfels. Maar de uitleg op de website was zo duidelijk dat ik het gewoon geprobeerd heb. De installatie was binnen een uur geregeld met de video-instructie die ik ontving."</p>
+          <div class="testimonial-author">Martijn V.</div>
+          <div class="testimonial-role">Ondernemer, 34 jaar</div>
+        </div>
+        <div class="testimonial">
+          <div class="stars">★★★★★</div>
+          <p class="testimonial-text">"Wat mij over de streep trok was de Myfxbook verificatie. Je kunt gewoon zelf controleren of de resultaten kloppen — er is niks verborgen. Dat is heel anders dan de meeste trading aanbiedingen die ik eerder heb gezien."</p>
+          <div class="testimonial-author">Anouk D.</div>
+          <div class="testimonial-role">Freelancer, 29 jaar</div>
+        </div>
+        <div class="testimonial">
+          <div class="stars">★★★★★</div>
+          <p class="testimonial-text">"Na maanden twijfelen toch de stap gezet. De begeleiding na mijn storting was top — ik kreeg een persoonlijke e-mail en een duidelijke video. Nu volg ik gewoon live mee via de MT5 app. Simpeler dan ik verwacht had."</p>
+          <div class="testimonial-author">Kevin M.</div>
+          <div class="testimonial-role">ZZP'er, 41 jaar</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq">
+    <div class="container">
+      <div class="eyebrow">Veelgestelde vragen</div>
+      <h2>Nog vragen? Hier zijn de antwoorden</h2>
+      <p class="sec-desc">De meest gestelde vragen van mensen die net beginnen.</p>
+
+      <div class="faq-list">
+
+        <div class="faq-item">
+          <button class="faq-q">
+            Moet ik verstand hebben van trading om dit te gebruiken?
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-a"><p>Nee, absoluut niet. Het algoritme doet alles automatisch. Jij hoeft geen enkele trade zelf te plaatsen, geen markt te analyseren en geen beslissingen te maken. Je opent een account, stelt eenmalig alles in (met onze begeleiding) en het systeem doet de rest. De enige "actie" van jou is het instellen van de koppeling — en daarvoor sturen wij je een video-instructie.</p></div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-q">
+            Is mijn geld veilig? Kan Biematic bij mijn geld?
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-a"><p>Nee, Biematic heeft <strong>geen toegang</strong> tot jouw geld. Je geld staat op je eigen account bij Vantage — een gereguleerde broker. Biematic (via MetaCopier) kan alleen trades uitvoeren, maar kan je geld niet opnemen of verplaatsen. Je bent altijd zelf eigenaar van je account en kunt je geld op elk moment opnemen via Vantage.</p></div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-q">
+            Wat is het minimum bedrag dat ik nodig heb?
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-a"><p>Het minimum is €1.000 of $1.000. Dit bedrag moet je in één keer storten op je Vantage account. Met minder dan €1.000 kan het algoritme niet goed functioneren — de risicospreiding werkt dan niet correct en de resultaten zullen afwijken van wat op Myfxbook te zien is.</p></div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-q">
+            Hoeveel rendement kan ik verwachten?
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-a"><p>We garanderen geen rendement — niemand kan dat eerlijk doen bij trading. Wat we wél kunnen laten zien zijn de historische resultaten: de afgelopen 19 maanden is elke maand positief afgesloten, met een gemiddelde van circa 7-8% per maand. Maar dit zijn historische resultaten — toekomstige resultaten kunnen afwijken. Bekijk alle geverifieerde data op <a href="https://www.myfxbook.com/members/HRC_Algo/hrc-algo/12029710" target="_blank" rel="noopener">Myfxbook</a>.</p></div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-q">
+            Wanneer kan ik mijn geld weer opnemen?
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-a"><p>Je kunt op elk gewenst moment stoppen en je geld opnemen via je Vantage account. Er is geen lock-up periode — jij beslist wanneer je wil stoppen. Let wel op: als er openstaande trades zijn, zullen die eerst gesloten moeten worden voordat je het volledige bedrag kunt opnemen.</p></div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-q">
+            Wat als ik ergens niet uitkom tijdens de installatie?
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-a"><p>Geen probleem. Na je storting sturen we je een volledige video-instructie voor de MetaCopier installatie. Kom je er alsnog niet uit? Stuur dan een e-mail naar <a href="mailto:biematic@outlook.com">biematic@outlook.com</a> — we helpen je persoonlijk verder. We willen dat iedereen succesvol gestart is.</p></div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-q">
+            Kost Biematic geld? Wat zijn de kosten?
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-a"><p>Het openen van een account bij Vantage via Biematic is gratis. Er zijn geen abonnementskosten van Biematic. Vantage rekent wel normale broker kosten (spreads) per trade — dit zijn standaard kosten die iedere broker hanteert en die al verrekend zijn in de resultaten die je op Myfxbook ziet. MetaCopier heeft ook een gratis plan beschikbaar.</p></div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-q">
+            Wat is het risico? Kan ik mijn geld verliezen?
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-a"><p>Ja, trading brengt altijd risico's met zich mee en het is mogelijk om (een deel van) je inleg te verliezen. Daarom is er een veiligheidsinstelling ingebouwd: de bot sluit automatisch alle openstaande trades als het verlies op je account meer dan 30% bedraagt. Dit beschermt je tegen grote verliezen. Investeer nooit geld dat je niet kunt missen.</p></div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section id="cta">
+    <div class="container">
+      <div class="cta-box">
+        <svg class="cta-glow" viewBox="0 0 400 180" fill="none">
+          <defs><filter id="cglow"><feGaussianBlur stdDeviation="30"/></filter></defs>
+          <ellipse cx="200" cy="90" rx="180" ry="55" fill="#3b82f6" opacity="0.06" filter="url(#cglow)"/>
+        </svg>
+        <div class="eyebrow" style="display:flex;justify-content:center;">Aan de slag</div>
+        <h2>Klaar om te beginnen?</h2>
+        <p>Open vandaag nog een account bij Vantage via Biematic en koppel je account aan het algoritme.</p>
+        <a href="https://go.wealthwaveaffiliation.com/visit/?bta=35157&brand=vantagefx" class="btn-primary" target="_blank" rel="noopener" style="margin:0 auto;">
+          Open gratis account bij Vantage
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a>
+        <div><a href="mailto:biematic@outlook.com" class="contact-link">✉ biematic@outlook.com</a></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DISCLAIMER -->
+  <section id="disclaimer">
+    <div class="disc-inner">
+      <div style="font-size:0.9rem;opacity:0.3;flex-shrink:0;margin-top:0.1rem;">⚠️</div>
+      <div class="disc-text"><strong>Risicowaarschuwing:</strong> Trading in financiële instrumenten brengt aanzienlijke risico's met zich mee. Je kunt (een deel van) je ingelegde kapitaal verliezen. In het verleden behaalde resultaten bieden geen garantie voor de toekomst. Biematic verstrekt geen financieel advies en garandeert geen rendementen. Investeer alleen geld dat je kunt missen.</div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-inner">
+      <div>
+        <div class="footer-logo">Biematic</div>
+        <div class="footer-desc">Toegang tot een geverifieerd trading algoritme — transparant, inzichtelijk, bewezen.</div>
+        <a href="mailto:biematic@outlook.com" class="footer-contact">✉ biematic@outlook.com</a>
+      </div>
+      <ul class="footer-links">
+        <li><a href="#uitleg">Hoe werkt het?</a></li>
+        <li><a href="#stats">Resultaten</a></li>
+        <li><a href="#onboarding">Stap voor stap</a></li>
+        <li><a href="#faq">FAQ</a></li>
+        <li><a href="mailto:biematic@outlook.com">Contact</a></li>
+      </ul>
+      <div class="footer-copy">© 2026 Biematic</div>
+    </div>
+  </footer>
+
+  <!-- MOBIELE STICKY CTA -->
+  <div class="sticky-cta" id="stickyCta">
+    <div class="sticky-cta-text">
+      <strong>Klaar om te starten?</strong>
+      Open gratis een account via Vantage
+    </div>
+    <a href="https://go.wealthwaveaffiliation.com/visit/?bta=35157&brand=vantagefx" class="btn-primary" target="_blank" rel="noopener" style="white-space:nowrap;font-size:0.72rem;padding:0.65rem 1.25rem;">
+      Start nu
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+    </a>
+  </div>
+
+  <script>
+  /* ══════════════════════════════════════
+     STICKY CTA — verschijnt na hero
+  ══════════════════════════════════════ */
+  const stickyCta = document.getElementById('stickyCta');
+  const heroSection = document.getElementById('hero');
+
+  const stickyObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) {
+        stickyCta.style.transform = 'translateY(0)';
+      } else {
+        stickyCta.style.transform = 'translateY(110%)';
+      }
+    });
+  }, { threshold: 0.1 });
+
+  stickyCta.style.transition = 'transform 0.35s ease';
+  stickyCta.style.transform = 'translateY(110%)';
+  stickyObserver.observe(heroSection);
+
+  /* ══════════════════════════════════════
+     FAQ ACCORDION
+  ══════════════════════════════════════ */
+  document.querySelectorAll('.faq-q').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const item = btn.parentElement;
+      const isOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+      if (!isOpen) item.classList.add('open');
+    });
+  });
+
+  /* ══════════════════════════════════════
+     BROKER DATA
+  ══════════════════════════════════════ */
+  const BROKERS = {
+    vantage:    { name: 'Vantage',        link: 'https://go.wealthwaveaffiliation.com/visit/?bta=35157&brand=vantagefx' },
+    startrader: { name: 'Startrader',     link: 'https://go.wealthwaveaffiliation.com/visit/?bta=35157&brand=startrader' },
+    puprime:    { name: 'PU Prime',       link: 'https://go.wealthwaveaffiliation.com/visit/?bta=35157&brand=pu' },
+    vtmarkets:  { name: 'VT Markets',     link: 'https://go.wealthwaveaffiliation.com/visit/?bta=35157&brand=vtuk' },
+  };
+  const PRIORITY = ['vantage','startrader','puprime','vtmarkets'];
+
+  /* ══════════════════════════════════════
+     HAMBURGER
+  ══════════════════════════════════════ */
+  document.getElementById('hamburger').addEventListener('click', () => document.getElementById('mobile-overlay').classList.add('open'));
+  document.getElementById('mobile-close').addEventListener('click', closeMobile);
+  function closeMobile() { document.getElementById('mobile-overlay').classList.remove('open'); }
+
+  /* ══════════════════════════════════════
+     HLS VIDEO BACKGROUND
+  ══════════════════════════════════════ */
+  const video = document.getElementById('hero-video');
+  const hlsUrl = 'https://stream.mux.com/tLkHO1qZoaaQOUeVWo8hEBeGQfySP02EPS02BmnNFyXys.m3u8';
+
+  if (Hls.isSupported()) {
+    const hls = new Hls({ enableWorker: false });
+    hls.loadSource(hlsUrl);
+    hls.attachMedia(video);
+    hls.on(Hls.Events.MANIFEST_PARSED, () => video.play().catch(() => {}));
+    hls.on(Hls.Events.ERROR, () => { video.style.display = 'none'; });
+  } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+    video.src = hlsUrl;
+    video.play().catch(() => {});
+  } else {
+    video.style.display = 'none';
+  }
+
+  /* ══════════════════════════════════════
+     CANVAS FALLBACK BG
+  ══════════════════════════════════════ */
+  const canvas = document.getElementById('bg-canvas');
+  const c = canvas.getContext('2d');
+  let pts = [], offset = 0;
+
+  function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    buildPts();
+  }
+  function buildPts() {
+    pts = [];
+    let y = canvas.height * 0.55;
+    for (let x = 0; x < canvas.width + 200; x += 4) {
+      y += (Math.random() - 0.47) * 3;
+      y = Math.max(canvas.height * 0.2, Math.min(canvas.height * 0.85, y));
+      pts.push([x, y]);
+    }
+  }
+  function drawBg() {
+    c.clearRect(0, 0, canvas.width, canvas.height);
+    const shift = offset % canvas.width;
+
+    c.beginPath();
+    pts.forEach(([x, y], i) => { const rx = x - shift; i === 0 ? c.moveTo(rx, y) : c.lineTo(rx, y); });
+    c.lineTo(pts[pts.length-1][0] - shift, canvas.height);
+    c.lineTo(pts[0][0] - shift, canvas.height);
+    c.closePath();
+    const g = c.createLinearGradient(0, 0, 0, canvas.height);
+    g.addColorStop(0, 'rgba(59,130,246,0.06)');
+    g.addColorStop(1, 'rgba(59,130,246,0)');
+    c.fillStyle = g;
+    c.fill();
+
+    c.beginPath();
+    pts.forEach(([x, y], i) => { const rx = x - shift; i === 0 ? c.moveTo(rx, y) : c.lineTo(rx, y); });
+    c.strokeStyle = 'rgba(59,130,246,0.2)';
+    c.lineWidth = 1.5;
+    c.stroke();
+
+    offset += 0.35;
+    requestAnimationFrame(drawBg);
+  }
+  window.addEventListener('resize', resize);
+  resize();
+  drawBg();
+
+  /* ══════════════════════════════════════
+     3D CARD MOUSE PARALLAX
+  ══════════════════════════════════════ */
+  const cardEl = document.getElementById('card3d');
+  const heroEl = document.getElementById('hero');
+  let isHovering = false;
+
+  heroEl.addEventListener('mousemove', (e) => {
+    const r = cardEl.getBoundingClientRect();
+    const cx = r.left + r.width / 2;
+    const cy = r.top + r.height / 2;
+    const dx = (e.clientX - cx) / 22;
+    const dy = (e.clientY - cy) / 22;
+    cardEl.style.animation = 'none';
+    cardEl.style.transform = `rotateX(${-dy}deg) rotateY(${dx}deg) translateY(-8px)`;
+    isHovering = true;
+  });
+
+  heroEl.addEventListener('mouseleave', () => {
+    isHovering = false;
+    cardEl.style.animation = 'cardFloat 7s ease-in-out infinite';
+    cardEl.style.transform = '';
+  });
+
+  /* ══════════════════════════════════════
+     HOE HET WERKT — BROKER SELECTOR
+  ══════════════════════════════════════ */
+  let activeBroker = 'vantage';
+
+  function updateStep1(key) {
+    const b = BROKERS[key];
+    document.getElementById('step1-broker-name').textContent = b.name;
+    document.getElementById('step1-broker-link').href = b.link;
+    activeBroker = key;
+  }
+
+  updateStep1('vantage');
+
+  document.querySelectorAll('.how-broker-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.how-broker-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      updateStep1(btn.dataset.broker);
+    });
+  });
+
+  /* ══════════════════════════════════════
+     BROKER SELECTOR (al een account)
+  ══════════════════════════════════════ */
+  const selected = new Set();
+
+  document.querySelectorAll('.broker-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const b = btn.dataset.broker;
+      selected.has(b) ? (selected.delete(b), btn.classList.remove('selected')) : (selected.add(b), btn.classList.add('selected'));
+      updateBrokerResult();
+    });
+  });
+
+  function updateBrokerResult() {
+    const el = document.getElementById('broker-result');
+    if (!selected.size) { el.classList.remove('visible'); return; }
+    const rec = PRIORITY.find(b => !selected.has(b));
+    el.classList.add('visible');
+    if (rec) {
+      el.innerHTML = `
+        <h3>Wij raden: ${BROKERS[rec].name}</h3>
+        <p>Op basis van je bestaande accounts is <strong style="color:var(--text);">${BROKERS[rec].name}</strong> de beste optie om het algoritme op aan te sluiten.</p>
+        <a href="${BROKERS[rec].link}" class="btn-primary" target="_blank" rel="noopener" style="display:inline-flex;margin-top:0.5rem;">Open account bij ${BROKERS[rec].name}</a>
+      `;
+    } else {
+      el.innerHTML = `
+        <h3>Je hebt al accounts bij alle brokers</h3>
+        <p>Neem contact op — we kijken samen welke broker het beste past.</p>
+        <a href="mailto:biematic@outlook.com" class="btn-primary" style="display:inline-flex;margin-top:0.5rem;">Neem contact op</a>
+      `;
+    }
+  }
+
+  /* ══════════════════════════════════════
+     PERFORMANCE CHART
+  ══════════════════════════════════════ */
+  const d24 = { labels:['Jun','Jul','Aug','Sep','Okt','Nov','Dec'], values:[-1.58,2.31,2.42,6.50,3.28,6.00,2.49] };
+  const d25 = { labels:['Jan','Feb','Mrt','Apr','Mei','Jun','Jul','Aug','Sep','Okt','Nov','Dec'], values:[2.40,3.60,11.46,7.87,9.16,6.30,9.57,8.32,12.99,16.80,7.46,5.08] };
+  const d26 = { labels:['Jan','Feb','Mrt','Apr','Mei','Jun','Jul'], values:[5.46,9.32,5.39,6.98,4.39,8.68,4.14] };
+  const dAll = {
+    labels:["Jun '24","Jul '24","Aug '24","Sep '24","Okt '24","Nov '24","Dec '24","Jan '25","Feb '25","Mrt '25","Apr '25","Mei '25","Jun '25","Jul '25","Aug '25","Sep '25","Okt '25","Nov '25","Dec '25","Jan '26","Feb '26","Mrt '26","Apr '26","Mei '26","Jun '26","Jul '26"],
+    values:[-1.58,2.31,2.42,6.50,3.28,6.00,2.49,2.40,3.60,11.46,7.87,9.16,6.30,9.57,8.32,12.99,16.80,7.46,5.08,5.46,9.32,5.39,6.98,4.39,8.68,4.14]
+  };
+
+  const clr = v => v >= 0 ? '#3b82f6' : '#ef4444';
+  const hclr = v => v >= 0 ? '#60a5fa' : '#f87171';
+
+  const chart = new Chart(document.getElementById('performanceChart').getContext('2d'), {
+    type: 'bar',
+    data: {
+      labels: d26.labels,
+      datasets: [{ data: d26.values, backgroundColor: d26.values.map(clr), hoverBackgroundColor: d26.values.map(hclr), borderRadius: 5, borderSkipped: false }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { backgroundColor: '#0d1220', borderColor: 'rgba(255,255,255,0.07)', borderWidth: 1, titleColor: 'rgba(241,245,249,0.5)', bodyColor: '#60a5fa', titleFont: { family:'Inter', size:11 }, bodyFont: { family:'Inter', size:15, weight:'700' }, padding: 12, callbacks: { label: ctx => ` ${ctx.parsed.y > 0 ? '+' : ''}${ctx.parsed.y.toFixed(2)}%` } }
+      },
+      scales: {
+        x: { grid: { color:'rgba(255,255,255,0.04)', drawBorder:false }, ticks: { color:'rgba(241,245,249,0.35)', font:{family:'Inter',size:10,weight:'600'} }, border:{display:false} },
+        y: { grid: { color:'rgba(255,255,255,0.04)', drawBorder:false }, ticks: { color:'rgba(241,245,249,0.35)', font:{family:'Inter',size:10}, callback: v => v+'%' }, border:{display:false}, beginAtZero:true }
+      },
+      animation: { duration: 400, easing: 'easeInOutQuart' }
+    }
+  });
+
+  document.querySelectorAll('.chart-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.chart-tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      const d = tab.dataset.year === '2024' ? d24 : tab.dataset.year === '2025' ? d25 : tab.dataset.year === '2026' ? d26 : dAll;
+      chart.data.labels = d.labels;
+      chart.data.datasets[0].data = d.values;
+      chart.data.datasets[0].backgroundColor = d.values.map(clr);
+      chart.data.datasets[0].hoverBackgroundColor = d.values.map(hclr);
+      chart.update();
+    });
+  });
+  </script>
+</body>
+</html>
