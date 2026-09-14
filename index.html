@@ -1268,11 +1268,10 @@
         </div></div>
 
         <div class="ob-step"><div class="ob-num">2</div><div class="ob-body">
-          <h3>Controleer je inbox — je ontvangt twee e-mails van Vantage</h3>
-          <p>Direct na registratie stuurt Vantage je twee e-mails:<br/><br/>
-          • <strong style="color:var(--text);">E-mail 1:</strong> Een bevestigingslink om je e-mailadres te verifiëren — klik hierop<br/>
-          • <strong style="color:var(--text);">E-mail 2:</strong> Je inloggegevens voor MetaTrader 5 (MT5) — sla deze op, die heb je later nodig<br/><br/>
-          Niet ontvangen? Controleer je spam/ongewenste mail folder.</p>
+          <h3>Bevestig je e-mailadres</h3>
+          <p>Direct na registratie stuurt Vantage je een bevestigingsmail met een link om je e-mailadres te verifiëren. Klik daarop.<br/><br/>
+          Niet ontvangen? Controleer je spam/ongewenste mail folder.<br/><br/>
+          <strong style="color:var(--text);">Let op:</strong> je MT5-inloggegevens krijg je nu nog niet — die ontvang je pas nadat je in stap 4 je RAW ECN trading account hebt aangemaakt.</p>
         </div></div>
 
         <div class="ob-step"><div class="ob-num">3</div><div class="ob-body">
@@ -1285,11 +1284,12 @@
         </div></div>
 
         <div class="ob-step"><div class="ob-num">4</div><div class="ob-body">
-          <h3>Selecteer het juiste accounttype: RAW ECN + MT5</h3>
-          <p>Bij het aanmaken van je trading account in het Vantage dashboard moet je een accounttype kiezen. Kies altijd:<br/><br/>
+          <h3>Maak een trading account aan: RAW ECN + MT5</h3>
+          <p>Log in bij Vantage en maak een trading account aan. Kies altijd:<br/><br/>
           • <strong style="color:var(--text);">Platform: MetaTrader 5 (MT5)</strong><br/>
           • <strong style="color:var(--text);">Accounttype: RAW ECN</strong><br/><br/>
-          Dit is het type dat compatibel is met het HRC ALGO algoritme. Kies je een ander type, dan werkt de koppeling niet.</p>
+          Dit is het type dat compatibel is met het HRC ALGO algoritme. Kies je een ander type, dan werkt de koppeling niet.<br/><br/>
+          Zodra je trading account is aangemaakt, ontvang je je <strong style="color:var(--text);">MT5-inloggegevens</strong> per e-mail — bewaar deze goed, die heb je later nodig.</p>
         </div></div>
 
         <div class="ob-step"><div class="ob-num">5</div><div class="ob-body">
@@ -1319,7 +1319,7 @@
 
         <div class="ob-step"><div class="ob-num">8</div><div class="ob-body">
           <h3>Koppel je Vantage-account in MetaCopier</h3>
-          <p>Ga in MetaCopier naar <strong style="color:var(--text);">"Accounts"</strong> en voeg je Vantage trading account toe (server + je MT5-inloggegevens uit stap 2).<br/><br/>
+          <p>Ga in MetaCopier naar <strong style="color:var(--text);">"Accounts"</strong> en voeg je Vantage trading account toe (server + je MT5-inloggegevens uit stap 4).<br/><br/>
           <strong style="color:#ef4444;">⚠️ Gebruik je hoofdwachtwoord, niet het investor password</strong> — anders wordt je account read-only en werkt de koppeling niet.</p>
         </div></div>
 
@@ -1333,7 +1333,7 @@
 
         <div class="ob-step"><div class="ob-num">10</div><div class="ob-body">
           <h3>Open MetaTrader 5 en volg alles live</h3>
-          <p>Download de gratis <strong style="color:var(--text);">MetaTrader 5 app</strong> op je telefoon of computer (zoek op "MT5" in de App Store of Google Play). Log in met de inloggegevens die je in stap 2 hebt ontvangen van Vantage.<br/><br/>
+          <p>Download de gratis <strong style="color:var(--text);">MetaTrader 5 app</strong> op je telefoon of computer (zoek op "MT5" in de App Store of Google Play). Log in met de inloggegevens die je in stap 4 hebt ontvangen van Vantage.<br/><br/>
           Je ziet nu alle live trades die het algoritme uitvoert op jouw account. Winst, verlies, openstaande posities — alles staat er overzichtelijk in.</p>
         </div></div>
 
@@ -1835,16 +1835,16 @@
         link: BROKERS.vantage.link, linkLabel: 'Open Vantage account →'
       },
       {
-        title: 'Controleer je inbox',
-        body: `Je ontvangt twee e-mails van Vantage: één om je e-mailadres te bevestigen, en één met je MT5-inloggegevens. Bewaar die goed — die heb je later nodig.<br><br>Niets ontvangen? Check je spam-folder.`
+        title: 'Bevestig je e-mailadres',
+        body: `Direct na registratie stuurt Vantage je een bevestigingsmail. Klik op de link om je e-mailadres te verifiëren.<br><br>Niets ontvangen? Check je spam-folder.<br><br><strong>Let op:</strong> je MT5-inloggegevens krijg je nu nog niet — die volgen pas nadat je in stap 4 je RAW ECN trading account hebt aangemaakt.`
       },
       {
         title: 'Verifieer je identiteit',
         body: `Log in bij Vantage en upload een foto van je paspoort, ID-kaart of rijbewijs (voor- en achterkant). Dit is verplicht bij elke gereguleerde broker en duurt meestal 1-2 werkdagen.`
       },
       {
-        title: 'Kies het juiste accounttype',
-        body: `Selecteer bij het aanmaken van je trading account: <strong>Platform: MT5</strong> en <strong>Accounttype: RAW ECN</strong>. Alleen dit type werkt met het HRC ALGO-algoritme — een ander type betekent dat de koppeling niet werkt.`
+        title: 'Maak een trading account aan: RAW ECN + MT5',
+        body: `Log in bij Vantage en maak een trading account aan met <strong>Platform: MT5</strong> en <strong>Accounttype: RAW ECN</strong>. Alleen dit type werkt met het HRC ALGO-algoritme — een ander type betekent dat de koppeling niet werkt.<br><br>Zodra je account is aangemaakt, ontvang je je <strong>MT5-inloggegevens</strong> per e-mail — bewaar deze goed.`
       },
       {
         title: 'Stort minimaal €1.000',
@@ -1861,7 +1861,7 @@
       },
       {
         title: 'Koppel je Vantage-account in MetaCopier',
-        body: `Ga naar <strong>"Accounts"</strong> en voeg je Vantage trading account toe (server + je MT5-inloggegevens uit stap 2).<br><br><strong style="color:#ef4444;">⚠️ Gebruik je hoofdwachtwoord, niet het investor password</strong> — anders wordt je account read-only en werkt de koppeling niet.`
+        body: `Ga naar <strong>"Accounts"</strong> en voeg je Vantage trading account toe (server + je MT5-inloggegevens uit stap 4).<br><br><strong style="color:#ef4444;">⚠️ Gebruik je hoofdwachtwoord, niet het investor password</strong> — anders wordt je account read-only en werkt de koppeling niet.`
       },
       {
         title: 'Zoek HRC ALGO op en volg het signaal',
@@ -1869,7 +1869,7 @@
       },
       {
         title: 'Open MT5 en volg live mee',
-        body: `Download de gratis MetaTrader 5 app en log in met de gegevens uit stap 2. Je ziet nu alle trades die het algoritme uitvoert — winst, verlies en open posities, live.`
+        body: `Download de gratis MetaTrader 5 app en log in met de gegevens uit stap 4. Je ziet nu alle trades die het algoritme uitvoert — winst, verlies en open posities, live.`
       }
     ];
 
