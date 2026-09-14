@@ -733,6 +733,103 @@
     .footer-desc { font-size: 0.75rem; color: rgba(241,245,249,0.3); margin-top: 0.3rem; max-width: 220px; line-height: 1.5; }
     .footer-contact { font-size: 0.72rem; color: var(--muted); text-decoration: none; display: block; margin-top: 0.25rem; }
     .footer-contact:hover { color: var(--blue); }
+
+    /* ═══════════════════════════════
+       ONBOARDING CHATBOT
+    ═══════════════════════════════ */
+    #chat-toggle {
+      position: fixed; right: 1.5rem; bottom: 1.5rem; z-index: 220;
+      width: 58px; height: 58px; border-radius: 50%; border: none; cursor: pointer;
+      background: var(--blue); color: #fff;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 8px 30px rgba(59,130,246,0.4);
+      transition: transform 0.2s, opacity 0.2s;
+    }
+    #chat-toggle:hover { transform: translateY(-2px) scale(1.04); }
+    #chat-toggle svg { width: 24px; height: 24px; }
+    #chat-toggle .chat-close-icon { display: none; }
+    #chat-toggle.open .chat-chat-icon { display: none; }
+    #chat-toggle.open .chat-close-icon { display: block; }
+    #chat-badge {
+      position: absolute; top: -2px; right: -2px; width: 14px; height: 14px; border-radius: 50%;
+      background: var(--red); border: 2px solid var(--bg);
+    }
+    @media (max-width: 768px) { #chat-toggle { bottom: 5rem; } }
+
+    #chat-panel {
+      position: fixed; right: 1.5rem; bottom: 5.5rem; z-index: 219;
+      width: 360px; max-width: calc(100vw - 2rem); height: 520px; max-height: calc(100vh - 8rem);
+      background: #0b0f1c; border: 1px solid var(--border); border-radius: 18px;
+      display: none; flex-direction: column; overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    }
+    #chat-panel.open { display: flex; }
+    @media (max-width: 768px) { #chat-panel { bottom: 8.5rem; right: 1rem; width: calc(100vw - 2rem); } }
+
+    .chat-head {
+      background: linear-gradient(135deg, #0d1729, #0b1120);
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 1.25rem; display: flex; align-items: center; gap: 0.75rem;
+    }
+    .chat-avatar {
+      width: 36px; height: 36px; border-radius: 50%; background: var(--blue-dim);
+      border: 1px solid rgba(59,130,246,0.3); color: var(--blue);
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 0.85rem; flex-shrink: 0;
+    }
+    .chat-head-title { font-size: 0.85rem; font-weight: 700; color: var(--text); }
+    .chat-head-sub { font-size: 0.68rem; color: var(--muted); display: flex; align-items: center; gap: 0.35rem; }
+    .chat-head-sub .live-dot { width: 5px; height: 5px; }
+
+    .chat-body { flex: 1; overflow-y: auto; padding: 1.1rem; display: flex; flex-direction: column; gap: 0.7rem; }
+    .chat-body::-webkit-scrollbar { width: 5px; }
+    .chat-body::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
+
+    .chat-row { display: flex; gap: 0.5rem; align-items: flex-end; }
+    .chat-row.user { justify-content: flex-end; }
+    .chat-bubble {
+      max-width: 84%; padding: 0.65rem 0.9rem; border-radius: 14px;
+      font-size: 0.8rem; line-height: 1.55; color: var(--text);
+      background: var(--surface); border: 1px solid var(--border); border-bottom-left-radius: 4px;
+    }
+    .chat-row.user .chat-bubble {
+      background: var(--blue-dim); border-color: rgba(59,130,246,0.3);
+      border-bottom-left-radius: 14px; border-bottom-right-radius: 4px;
+    }
+    .chat-bubble strong { color: var(--blue); }
+    .chat-bubble a { color: var(--blue); font-weight: 600; }
+    .chat-bubble .chat-progress { font-size: 0.62rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.4rem; font-weight: 700; }
+    .chat-mini-avatar {
+      width: 24px; height: 24px; border-radius: 50%; background: var(--blue-dim);
+      border: 1px solid rgba(59,130,246,0.3); color: var(--blue);
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 0.6rem; flex-shrink: 0;
+    }
+
+    .chat-options { display: flex; flex-direction: column; gap: 0.4rem; padding-left: 30px; }
+    .chat-opt-btn {
+      align-self: flex-start; background: transparent; border: 1px solid rgba(59,130,246,0.3);
+      color: var(--blue); font-family: 'Inter', sans-serif; font-size: 0.76rem; font-weight: 600;
+      padding: 0.5rem 0.9rem; border-radius: 100px; cursor: pointer; transition: all 0.15s;
+      text-align: left;
+    }
+    .chat-opt-btn:hover { background: var(--blue-dim); }
+    .chat-opt-btn:disabled { opacity: 0.4; cursor: default; }
+    .chat-opt-btn.link { border-color: rgba(59,130,246,0.5); }
+
+    .chat-typing { display: flex; gap: 3px; padding: 0.3rem 0; }
+    .chat-typing span { width: 5px; height: 5px; border-radius: 50%; background: var(--muted); animation: chatTyping 1s infinite ease-in-out; }
+    .chat-typing span:nth-child(2) { animation-delay: 0.15s; }
+    .chat-typing span:nth-child(3) { animation-delay: 0.3s; }
+    @keyframes chatTyping { 0%, 60%, 100% { opacity: 0.25; transform: translateY(0); } 30% { opacity: 1; transform: translateY(-3px); } }
+
+    .chat-footer { border-top: 1px solid var(--border); padding: 0.6rem 0.9rem; }
+    .chat-restart {
+      width: 100%; background: none; border: none; color: var(--muted);
+      font-family: 'Inter', sans-serif; font-size: 0.68rem; letter-spacing: 0.05em; text-transform: uppercase;
+      cursor: pointer; padding: 0.3rem; transition: color 0.2s;
+    }
+    .chat-restart:hover { color: var(--blue); }
   </style>
 </head>
 <body>
@@ -1126,7 +1223,7 @@
         <div class="step panel">
           <div class="step-num">3</div>
           <h3>Koppel het algoritme aan jouw account</h3>
-          <p>In MetaCopier zoek je de bot op met de naam <strong style="color:var(--blue);">HRC ALGO</strong> en verbind je hem met jouw Vantage account. Nadat je gestort hebt, helpen wij je hiermee. Stuur ons een e-mail en wij regelen de toegang voor je.</p>
+          <p>In MetaCopier volg je het signaal <strong style="color:var(--blue);">HRC ALGO [XAUUSD V5 - X1] -30%</strong> vanaf jouw Vantage account. Nadat je gestort hebt, helpen wij je hiermee. Stuur ons een e-mail en wij regelen de toegang voor je.</p>
         </div>
         <div class="step panel">
           <div class="step-num">4</div>
@@ -1204,28 +1301,37 @@
 
         <div class="ob-step"><div class="ob-num">6</div><div class="ob-body">
           <h3>Stuur ons een e-mail — wij geven je toegang tot HRC ALGO</h3>
-          <p>Na je storting geven wij je handmatig toegang tot de HRC ALGO bot in MetaCopier. Stuur een e-mail naar ons met de volgende informatie:<br/><br/>
+          <p>Na je storting geven wij je handmatig toegang tot het HRC ALGO signaal in MetaCopier. Stuur een e-mail naar ons met de volgende informatie:<br/><br/>
           • Je <strong style="color:var(--text);">volledige naam</strong><br/>
           • Het <strong style="color:var(--text);">e-mailadres</strong> waarmee je bij Vantage bent geregistreerd<br/>
           • Een <strong style="color:var(--text);">screenshot van je storting</strong><br/><br/>
           <a href="mailto:biematic@outlook.com">→ Stuur naar biematic@outlook.com</a><br/><br/>
-          Wij reageren binnen 24 uur en sturen je dan de verdere stappen voor MetaCopier inclusief een video-instructie.</p>
+          <strong style="color:var(--text);">Let op:</strong> gebruik dit exacte e-mailadres straks ook voor je MetaCopier-account (stap 7) — toegang tot HRC ALGO is een besloten signaal en wordt gekoppeld op e-mailadres. Wij reageren binnen 24 uur.</p>
         </div></div>
 
         <div class="ob-step"><div class="ob-num">7</div><div class="ob-body">
-          <h3>Maak een MetaCopier account via de link hieronder</h3>
-          <p>MetaCopier is de service die automatisch alle trades van het HRC ALGO algoritme kopieert naar jouw Vantage account. Maak hier een account aan:<br/><br/>
-          <strong style="color:#ef4444;">⚠️ Gebruik ook hier de link, niet de MetaCopier app — anders wordt de koppeling niet correct geregistreerd.</strong><br/><br/>
-          <a href="https://metacopier.io/?aff=luke" target="_blank" rel="noopener">→ Klik hier om je MetaCopier account te openen</a></p>
+          <h3>Maak een MetaCopier account — met hetzelfde e-mailadres</h3>
+          <p>MetaCopier is de service die automatisch alle trades van het HRC ALGO signaal kopieert naar jouw Vantage account. Maak hier een account aan:<br/><br/>
+          <strong style="color:#ef4444;">⚠️ Gebruik de link, niet de MetaCopier app — anders wordt de koppeling niet correct geregistreerd. Registreer met exact hetzelfde e-mailadres dat je ons in stap 6 hebt gestuurd.</strong><br/><br/>
+          <a href="https://metacopier.io/?aff=luke" target="_blank" rel="noopener">→ Klik hier om je MetaCopier account te openen</a><br/><br/>
+          Voeg daarna direct je betaalmethode toe via <strong style="color:var(--text);">Dashboard → "Payment method"</strong>. MetaCopier rekent namelijk zelf ook kosten, los van je Vantage-broker — ongeveer €8 per maand, dagelijks verrekend zolang je account gekoppeld staat.</p>
         </div></div>
 
         <div class="ob-step"><div class="ob-num">8</div><div class="ob-body">
-          <h3>Voeg HRC ALGO toe en koppel je Vantage account</h3>
-          <p>In MetaCopier zoek je de bot op met de exacte naam <strong style="color:var(--blue);">HRC ALGO</strong>. Koppel hier je Vantage broker account aan. Nadat je toegang hebt ontvangen (via e-mail van ons), sturen wij je een video-instructie die dit stap voor stap laat zien.<br/><br/>
-          Stel de risico multiplier in op <strong style="color:var(--text);">1</strong> — dit zorgt ervoor dat de bot automatisch alle trades sluit als het verlies op je account meer dan 30% wordt. Dit is een veiligheidsinstelling — stel dit altijd in voordat het algoritme start.</p>
+          <h3>Koppel je Vantage-account in MetaCopier</h3>
+          <p>Ga in MetaCopier naar <strong style="color:var(--text);">"Accounts"</strong> en voeg je Vantage trading account toe (server + je MT5-inloggegevens uit stap 2).<br/><br/>
+          <strong style="color:#ef4444;">⚠️ Gebruik je hoofdwachtwoord, niet het investor password</strong> — anders wordt je account read-only en werkt de koppeling niet.</p>
         </div></div>
 
         <div class="ob-step"><div class="ob-num">9</div><div class="ob-body">
+          <h3>Zoek HRC ALGO op en volg het signaal</h3>
+          <p>Zodra wij je e-mailadres hebben toegevoegd aan de klantenlijst van het besloten HRC ALGO-signaal — meestal binnen 24 uur na stap 6 — kun je het signaal volgen op je gekoppelde account.<br/><br/>
+          Ga naar je gekoppelde account → klik op <strong style="color:var(--text);">"Features"</strong> → klik op het plusje <strong style="color:var(--text);">(+)</strong> → zoek naar <strong style="color:var(--text);">"Signal follower"</strong> → vul bij <strong style="color:var(--text);">"Signal provider"</strong> de exacte naam in: <strong style="color:var(--blue);">HRC ALGO [XAUUSD V5 - X1] -30%</strong> → klik op <strong style="color:var(--text);">"Save"</strong>.<br/><br/>
+          Er verschijnt een pop-up — klik daarin op <strong style="color:var(--text);">"Follow"</strong> om het signaal definitief te volgen.<br/><br/>
+          Wij sturen je hierbij een video-instructie zodra je toegang hebt. De "-30%" in de naam is de ingebouwde risicobegrenzing: het signaal stopt zelfstandig met handelen bij een verlies van circa 30% op je account — dit zit in het signaal zelf verwerkt, je hoeft hier zelf niets voor te configureren.</p>
+        </div></div>
+
+        <div class="ob-step"><div class="ob-num">10</div><div class="ob-body">
           <h3>Open MetaTrader 5 en volg alles live</h3>
           <p>Download de gratis <strong style="color:var(--text);">MetaTrader 5 app</strong> op je telefoon of computer (zoek op "MT5" in de App Store of Google Play). Log in met de inloggegevens die je in stap 2 hebt ontvangen van Vantage.<br/><br/>
           Je ziet nu alle live trades die het algoritme uitvoert op jouw account. Winst, verlies, openstaande posities — alles staat er overzichtelijk in.</p>
@@ -1235,7 +1341,7 @@
 
       <div class="alert warning">
         <span>⚠️</span>
-        <div><strong style="color:var(--danger);">Risico-instelling:</strong> Stel de risico multiplier in op <strong style="color:var(--text);">1</strong>. De bot sluit automatisch alle trades bij <strong style="color:var(--text);">-30% equity</strong>. Stel dit in vóórdat het algoritme start.</div>
+        <div><strong style="color:var(--danger);">Risicobegrenzing:</strong> Het HRC ALGO-algoritme stopt automatisch met handelen bij een verlies van circa <strong style="color:var(--text);">-30% equity</strong> — dit is ingebouwd in het algoritme zelf. Dit is geen garantie tegen verlies: trading blijft risicovol en je kunt (een deel van) je inleg verliezen.</div>
       </div>
     </div>
   </section>
@@ -1386,7 +1492,7 @@
             Wat is het risico? Kan ik mijn geld verliezen?
             <span class="faq-icon">+</span>
           </button>
-          <div class="faq-a"><p>Ja, trading brengt altijd risico's met zich mee en het is mogelijk om (een deel van) je inleg te verliezen. Daarom is er een veiligheidsinstelling ingebouwd: de bot sluit automatisch alle openstaande trades als het verlies op je account meer dan 30% bedraagt. Dit beschermt je tegen grote verliezen. Investeer nooit geld dat je niet kunt missen.</p></div>
+          <div class="faq-a"><p>Ja, trading brengt altijd risico's met zich mee en het is mogelijk om (een deel van) je inleg te verliezen. Het HRC ALGO-algoritme heeft een ingebouwde risicobegrenzing: bij een verlies van circa 30% op je account stopt het automatisch met handelen. Dit biedt geen garantie tegen verlies — investeer nooit geld dat je niet kunt missen.</p></div>
         </div>
 
       </div>
@@ -1439,6 +1545,27 @@
       <div class="footer-copy">© 2026 Biematic</div>
     </div>
   </footer>
+
+  <!-- ONBOARDING CHATBOT -->
+  <button id="chat-toggle" aria-label="Open onboarding-hulp">
+    <svg class="chat-chat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+    <svg class="chat-close-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    <span id="chat-badge"></span>
+  </button>
+
+  <div id="chat-panel">
+    <div class="chat-head">
+      <div class="chat-avatar">B</div>
+      <div>
+        <div class="chat-head-title">Biematic Onboarding-gids</div>
+        <div class="chat-head-sub"><span class="live-dot" style="animation:none;opacity:1;"></span>Stap voor stap · geen wachttijd</div>
+      </div>
+    </div>
+    <div class="chat-body" id="chat-body"></div>
+    <div class="chat-footer">
+      <button class="chat-restart" id="chat-restart">↺ Opnieuw beginnen</button>
+    </div>
+  </div>
 
   <!-- MOBIELE STICKY CTA -->
   <div class="sticky-cta" id="stickyCta">
@@ -1696,6 +1823,234 @@
       chart.update();
     });
   });
+
+  /* ══════════════════════════════════════
+     ONBOARDING CHATBOT
+  ══════════════════════════════════════ */
+  (function () {
+    const STEPS = [
+      {
+        title: 'Maak je account aan bij Vantage',
+        body: `Ga via de link hieronder naar Vantage en maak een gratis account aan met je e-mailadres. Laat het veld <strong>"Referred by"</strong> gewoon leeg.<br><br><strong style="color:#ef4444;">⚠️ Gebruik altijd deze link — niet de Vantage-app.</strong> Via de app wordt de koppeling niet correct geregistreerd.`,
+        link: BROKERS.vantage.link, linkLabel: 'Open Vantage account →'
+      },
+      {
+        title: 'Controleer je inbox',
+        body: `Je ontvangt twee e-mails van Vantage: één om je e-mailadres te bevestigen, en één met je MT5-inloggegevens. Bewaar die goed — die heb je later nodig.<br><br>Niets ontvangen? Check je spam-folder.`
+      },
+      {
+        title: 'Verifieer je identiteit',
+        body: `Log in bij Vantage en upload een foto van je paspoort, ID-kaart of rijbewijs (voor- en achterkant). Dit is verplicht bij elke gereguleerde broker en duurt meestal 1-2 werkdagen.`
+      },
+      {
+        title: 'Kies het juiste accounttype',
+        body: `Selecteer bij het aanmaken van je trading account: <strong>Platform: MT5</strong> en <strong>Accounttype: RAW ECN</strong>. Alleen dit type werkt met het HRC ALGO-algoritme — een ander type betekent dat de koppeling niet werkt.`
+      },
+      {
+        title: 'Stort minimaal €1.000',
+        body: `Ga naar "Funds" in je Vantage dashboard en stort minimaal €1.000.<br><br><strong style="color:var(--danger);">⚠️ Dit moet in één keer — meerdere kleinere stortingen tellen niet mee.</strong><br><br>Maak een screenshot van de bevestiging, die heb je in de volgende stap nodig.`
+      },
+      {
+        title: 'Stuur ons je gegevens',
+        body: `Mail je volledige naam, je Vantage e-mailadres en de stortingsscreenshot naar <a href="mailto:biematic@outlook.com">biematic@outlook.com</a>. Wij geven je daarna handmatig toegang tot HRC ALGO — meestal binnen 24 uur.<br><br><strong style="color:var(--text);">Let op:</strong> gebruik dit exacte e-mailadres straks ook voor je MetaCopier-account — toegang werkt via een besloten signaal, gekoppeld op e-mailadres.`
+      },
+      {
+        title: 'Maak een MetaCopier account',
+        body: `Maak een account aan met <strong>hetzelfde e-mailadres</strong> dat je ons in de vorige stap hebt gestuurd.<br><br><strong style="color:#ef4444;">⚠️ Gebruik de link, niet de app.</strong><br><br>Voeg daarna meteen je betaalmethode toe via <strong>Dashboard → "Payment method"</strong>. MetaCopier kost namelijk apart ongeveer €8/maand (dagelijks verrekend), los van je broker — dit loopt door zolang je account gekoppeld staat.`,
+        link: 'https://metacopier.io/?aff=luke', linkLabel: 'Open MetaCopier →'
+      },
+      {
+        title: 'Koppel je Vantage-account in MetaCopier',
+        body: `Ga naar <strong>"Accounts"</strong> en voeg je Vantage trading account toe (server + je MT5-inloggegevens uit stap 2).<br><br><strong style="color:#ef4444;">⚠️ Gebruik je hoofdwachtwoord, niet het investor password</strong> — anders wordt je account read-only en werkt de koppeling niet.`
+      },
+      {
+        title: 'Zoek HRC ALGO op en volg het signaal',
+        body: `Zodra wij je e-mailadres hebben toegevoegd aan de klantenlijst van het besloten HRC ALGO-signaal (meestal binnen 24 uur), kun je het volgen.<br><br>Ga naar je gekoppelde account → klik op <strong>"Features"</strong> → klik op het plusje <strong>(+)</strong> → zoek naar <strong>"Signal follower"</strong> → vul bij <strong>"Signal provider"</strong> de exacte naam in: <strong style="color:var(--blue);">HRC ALGO [XAUUSD V5 - X1] -30%</strong> → klik op <strong>"Save"</strong>.<br><br>Er verschijnt een pop-up — klik daarin op <strong>"Follow"</strong> om het signaal definitief te volgen.<br><br>Wij sturen je hierbij een video-instructie. De "-30%" in de naam is de ingebouwde risicobegrenzing van het signaal.`
+      },
+      {
+        title: 'Open MT5 en volg live mee',
+        body: `Download de gratis MetaTrader 5 app en log in met de gegevens uit stap 2. Je ziet nu alle trades die het algoritme uitvoert — winst, verlies en open posities, live.`
+      }
+    ];
+
+    const stepKey = i => 'step' + i;
+    const NODES = {};
+
+    NODES.start = {
+      body: `Hoi! 👋 Ik ben de Biematic onboarding-gids. Ik loop met je mee door het aanmelden en instellen van je account — dat kost ongeveer 10-15 minuten (exclusief broker-verificatie, dat kan 1-2 werkdagen duren).<br><br>Waarmee kan ik je helpen?`,
+      options: [
+        { label: 'Start de stap-voor-stap gids', next: stepKey(0) },
+        { label: 'Ik heb al een broker-account', next: 'already' },
+        { label: 'Wat kost dit precies?', next: 'costs' },
+        { label: 'Wat is het risico?', next: 'risk' }
+      ]
+    };
+
+    STEPS.forEach((s, i) => {
+      const opts = [];
+      opts.push(i < STEPS.length - 1
+        ? { label: 'Volgende stap →', next: stepKey(i + 1) }
+        : { label: 'Ik ben klaar ✓', next: 'done' });
+      if (i > 0) opts.push({ label: '← Vorige stap', next: stepKey(i - 1) });
+      opts.push({ label: 'Ik heb een vraag', next: 'help', returnTo: stepKey(i) });
+      NODES[stepKey(i)] = {
+        progress: `Stap ${i + 1} van ${STEPS.length}`,
+        title: s.title, body: s.body, link: s.link, linkLabel: s.linkLabel,
+        options: opts
+      };
+    });
+
+    NODES.already = {
+      body: `Top, dat scheelt tijd! Bij welke broker heb je al een account?`,
+      options: [
+        { label: 'Vantage', next: 'already-known' },
+        { label: 'Star Trader', next: 'already-known' },
+        { label: 'PU Prime', next: 'already-known' },
+        { label: 'VT Markets', next: 'already-known' },
+        { label: 'Een andere broker', next: 'already-other' }
+      ]
+    };
+    NODES['already-known'] = {
+      body: `Mooi. Zorg dat je account op <strong>MT5</strong> staat met accounttype <strong>RAW ECN</strong> — dat is vereist voor de koppeling met HRC ALGO. Vanaf daar volg je gewoon de rest: storten, toegang aanvragen en MetaCopier koppelen.`,
+      options: [
+        { label: 'Laat de vervolgstappen zien', next: stepKey(3) },
+        { label: 'Terug naar begin', next: 'start' }
+      ]
+    };
+    NODES['already-other'] = {
+      body: `Geen probleem — we ondersteunen ook andere brokers, al zijn de voorwaarden daar vaak wat minder gunstig. Neem contact met ons op, dan kijken we samen wat mogelijk is.`,
+      options: [
+        { label: '✉ Mail ons', action: 'mailto' },
+        { label: 'Terug naar begin', next: 'start' }
+      ]
+    };
+
+    NODES.costs = {
+      body: `Twee losse kosten om rekening mee te houden:<br><br>• <strong>Minimale inleg:</strong> €1.000, in één betaling bij je broker<br>• <strong>MetaCopier:</strong> ongeveer €8/maand (dagelijks ± $0,27/account), los van de broker — dit loopt door zolang je account gekoppeld staat<br><br>Biematic rekent jou zelf niets aan — wij ontvangen een vergoeding van de broker. Geen verborgen kosten daarbuiten.`,
+      options: [
+        { label: 'Verder met aanmelden', next: stepKey(0) },
+        { label: 'Wat is het risico?', next: 'risk' },
+        { label: 'Terug naar begin', next: 'start' }
+      ]
+    };
+    NODES.risk = {
+      body: `Belangrijk om te weten voordat je begint:<br><br>• Trading brengt risico met zich mee — je kunt (een deel van) je inleg verliezen<br>• Het HRC ALGO-algoritme heeft een ingebouwde risicobegrenzing rond <strong>-30% equity</strong><br>• Dit mechanisme zit in het algoritme zelf en valt buiten wat wij zelf kunnen verifiëren, omdat het algoritme niet ons eigendom is<br>• Resultaten uit het verleden bieden geen garantie voor de toekomst<br><br>Biematic geeft geen rendementsbeloften of garanties.`,
+      options: [
+        { label: 'Verder met aanmelden', next: stepKey(0) },
+        { label: 'Wat kost dit?', next: 'costs' },
+        { label: 'Terug naar begin', next: 'start' }
+      ]
+    };
+
+    NODES.help = {
+      body: `Voor persoonlijke vragen mail je ons het beste — we reageren meestal binnen 24 uur.`,
+      options: [
+        { label: '✉ Mail ons', action: 'mailto' },
+        { label: 'Verder waar ik was', next: () => returnTarget || 'start' },
+        { label: 'Terug naar begin', next: 'start' }
+      ]
+    };
+
+    NODES.done = {
+      body: `🎉 Dat was 'm! Zodra je toegang hebt en HRC ALGO gekoppeld staat, kun je alles live volgen in MT5.<br><br><strong style="color:var(--danger);">Let op:</strong> het algoritme heeft een ingebouwde risicobegrenzing rond -30% equity, maar dit is geen garantie tegen verlies — dit mechanisme valt buiten wat wij zelf kunnen verifiëren, omdat het algoritme niet ons eigendom is. Trading blijft risicovol; investeer alleen geld dat je kunt missen.`,
+      options: [
+        { label: '✉ Mail ons met vragen', action: 'mailto' },
+        { label: '↺ Opnieuw beginnen', next: 'start' }
+      ]
+    };
+
+    let returnTarget = null;
+    const toggleBtn = document.getElementById('chat-toggle');
+    const panel = document.getElementById('chat-panel');
+    const bodyEl = document.getElementById('chat-body');
+    const badge = document.getElementById('chat-badge');
+    let started = false;
+
+    function scrollBottom() { bodyEl.scrollTop = bodyEl.scrollHeight; }
+
+    function appendBotMessage(html) {
+      const row = document.createElement('div');
+      row.className = 'chat-row';
+      row.innerHTML = `<div class="chat-mini-avatar">B</div><div class="chat-bubble">${html}</div>`;
+      bodyEl.appendChild(row);
+      scrollBottom();
+    }
+    function appendUserMessage(text) {
+      const row = document.createElement('div');
+      row.className = 'chat-row user';
+      row.innerHTML = `<div class="chat-bubble"></div>`;
+      row.querySelector('.chat-bubble').textContent = text;
+      bodyEl.appendChild(row);
+      scrollBottom();
+    }
+    function appendTyping() {
+      const row = document.createElement('div');
+      row.className = 'chat-row';
+      row.id = 'chat-typing-row';
+      row.innerHTML = `<div class="chat-mini-avatar">B</div><div class="chat-bubble"><div class="chat-typing"><span></span><span></span><span></span></div></div>`;
+      bodyEl.appendChild(row);
+      scrollBottom();
+    }
+    function removeTyping() {
+      const r = document.getElementById('chat-typing-row');
+      if (r) r.remove();
+    }
+
+    function appendOptions(options, fromKey) {
+      const wrap = document.createElement('div');
+      wrap.className = 'chat-options';
+      options.forEach(opt => {
+        const btn = document.createElement('button');
+        btn.className = 'chat-opt-btn';
+        btn.textContent = opt.label;
+        btn.addEventListener('click', () => selectOption(opt, fromKey, wrap));
+        wrap.appendChild(btn);
+      });
+      bodyEl.appendChild(wrap);
+      scrollBottom();
+    }
+
+    function renderNode(key) {
+      const node = NODES[key];
+      if (!node) return;
+      let html = '';
+      if (node.progress) html += `<div class="chat-progress">${node.progress}</div>`;
+      if (node.title) html += `<strong>${node.title}</strong><br><br>`;
+      html += node.body;
+      if (node.link) html += `<br><br><a href="${node.link}" target="_blank" rel="noopener">${node.linkLabel || 'Open link →'}</a>`;
+      appendBotMessage(html);
+      if (node.options && node.options.length) appendOptions(node.options, key);
+    }
+
+    function selectOption(opt, fromKey, wrapEl) {
+      Array.from(wrapEl.children).forEach(b => b.disabled = true);
+      appendUserMessage(opt.label);
+      if (opt.action === 'mailto') window.location.href = 'mailto:biematic@outlook.com';
+      if (opt.next === 'help') returnTarget = opt.returnTo || fromKey;
+      if (!opt.next) return;
+      const nextKey = typeof opt.next === 'function' ? opt.next() : opt.next;
+      appendTyping();
+      setTimeout(() => { removeTyping(); renderNode(nextKey); }, 450);
+    }
+
+    function resetChat() {
+      bodyEl.innerHTML = '';
+      returnTarget = null;
+      renderNode('start');
+    }
+
+    toggleBtn.addEventListener('click', () => {
+      const willOpen = !panel.classList.contains('open');
+      panel.classList.toggle('open', willOpen);
+      toggleBtn.classList.toggle('open', willOpen);
+      if (willOpen) {
+        badge.style.display = 'none';
+        if (!started) { started = true; renderNode('start'); }
+      }
+    });
+
+    document.getElementById('chat-restart').addEventListener('click', resetChat);
+  })();
   </script>
 </body>
 </html>
