@@ -1318,12 +1318,18 @@
         </div></div>
 
         <div class="ob-step"><div class="ob-num">8</div><div class="ob-body">
-          <h3>Koppel je Vantage-account in MetaCopier</h3>
-          <p>Ga in MetaCopier naar <strong style="color:var(--text);">"Accounts"</strong> en voeg je Vantage trading account toe (server + je MT5-inloggegevens uit stap 4).<br/><br/>
-          <strong style="color:#ef4444;">⚠️ Gebruik je hoofdwachtwoord, niet het investor password</strong> — anders wordt je account read-only en werkt de koppeling niet.</p>
+          <h3>Maak een project aan in MetaCopier</h3>
+          <p>Voordat je een trading account kunt koppelen, moet je eerst een project aanmaken. Ga naar <strong style="color:var(--text);">"Projects"</strong> (linkerkant van het dashboard) → klik op het kruisje <strong style="color:var(--text);">(+)</strong> → vul een <strong style="color:var(--text);">"Project Name"</strong> in en selecteer je creditcard (bedrijfsnaam is optioneel).<br/><br/>
+          <strong style="color:var(--text);">Let op:</strong> de valuta van je project moet overeenkomen met de valuta van je betaalmethode uit stap 7. Sla daarna op — je project verschijnt nu in het overzicht.</p>
         </div></div>
 
         <div class="ob-step"><div class="ob-num">9</div><div class="ob-body">
+          <h3>Koppel je Vantage-account in MetaCopier</h3>
+          <p>Open je project en klik op het veld met het kruisje <strong style="color:var(--text);">(+)</strong> om een account te koppelen. Vul je Vantage trading account gegevens in (server + je MT5-inloggegevens uit stap 4).<br/><br/>
+          <strong style="color:#ef4444;">⚠️ Gebruik je hoofdwachtwoord, niet het investor password</strong> — anders wordt je account read-only en werkt de koppeling niet. Je account verschijnt daarna als "connected" en "activated".</p>
+        </div></div>
+
+        <div class="ob-step"><div class="ob-num">10</div><div class="ob-body">
           <h3>Zoek HRC ALGO op en volg het signaal</h3>
           <p>Zodra wij je e-mailadres hebben toegevoegd aan de klantenlijst van het besloten HRC ALGO-signaal — meestal binnen 24 uur na stap 6 — kun je het signaal volgen op je gekoppelde account.<br/><br/>
           Ga naar je gekoppelde account → klik op <strong style="color:var(--text);">"Features"</strong> → klik op het plusje <strong style="color:var(--text);">(+)</strong> → zoek naar <strong style="color:var(--text);">"Signal follower"</strong> → vul bij <strong style="color:var(--text);">"Signal provider"</strong> de exacte naam in: <strong style="color:var(--blue);">HRC ALGO [XAUUSD V5 - X1] -30%</strong> → klik op <strong style="color:var(--text);">"Save"</strong>.<br/><br/>
@@ -1331,7 +1337,7 @@
           Wij sturen je hierbij een video-instructie zodra je toegang hebt. De "-30%" in de naam is de ingebouwde risicobegrenzing: het signaal stopt zelfstandig met handelen bij een verlies van circa 30% op je account — dit zit in het signaal zelf verwerkt, je hoeft hier zelf niets voor te configureren.</p>
         </div></div>
 
-        <div class="ob-step"><div class="ob-num">10</div><div class="ob-body">
+        <div class="ob-step"><div class="ob-num">11</div><div class="ob-body">
           <h3>Open MetaTrader 5 en volg alles live</h3>
           <p>Download de gratis <strong style="color:var(--text);">MetaTrader 5 app</strong> op je telefoon of computer (zoek op "MT5" in de App Store of Google Play). Log in met de inloggegevens die je in stap 4 hebt ontvangen van Vantage.<br/><br/>
           Je ziet nu alle live trades die het algoritme uitvoert op jouw account. Winst, verlies, openstaande posities — alles staat er overzichtelijk in.</p>
@@ -1860,8 +1866,12 @@
         link: 'https://metacopier.io/?aff=luke', linkLabel: 'Open MetaCopier →'
       },
       {
+        title: 'Maak een project aan in MetaCopier',
+        body: `Voordat je een trading account kunt koppelen, maak je eerst een project aan. Ga naar <strong>"Projects"</strong> → klik op het kruisje <strong>(+)</strong> → vul een <strong>"Project Name"</strong> in en selecteer je creditcard.<br><br><strong style="color:var(--text);">Let op:</strong> de valuta van je project moet overeenkomen met je betaalmethode uit de vorige stap. Sla daarna op.`
+      },
+      {
         title: 'Koppel je Vantage-account in MetaCopier',
-        body: `Ga naar <strong>"Accounts"</strong> en voeg je Vantage trading account toe (server + je MT5-inloggegevens uit stap 4).<br><br><strong style="color:#ef4444;">⚠️ Gebruik je hoofdwachtwoord, niet het investor password</strong> — anders wordt je account read-only en werkt de koppeling niet.`
+        body: `Open je project en klik op het veld met het kruisje <strong>(+)</strong> om een account te koppelen. Vul je Vantage trading account gegevens in (server + je MT5-inloggegevens uit stap 4).<br><br><strong style="color:#ef4444;">⚠️ Gebruik je hoofdwachtwoord, niet het investor password</strong> — anders wordt je account read-only en werkt de koppeling niet.`
       },
       {
         title: 'Zoek HRC ALGO op en volg het signaal',
