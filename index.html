@@ -1888,7 +1888,6 @@
       body: `Hoi! 👋 Ik ben de Biematic onboarding-gids. Ik loop met je mee door het aanmelden en instellen van je account — dat kost ongeveer 10-15 minuten (exclusief broker-verificatie, die meestal binnen enkele minuten klaar is, met een paar uur als uitschieter).<br><br>Waarmee kan ik je helpen?`,
       options: [
         { label: 'Start de stap-voor-stap gids', next: stepKey(0) },
-        { label: 'Ik heb al een broker-account', next: 'already' },
         { label: 'Wat kost dit precies?', next: 'costs' },
         { label: 'Wat is het risico?', next: 'risk' }
       ]
@@ -1900,6 +1899,7 @@
         ? { label: 'Volgende stap →', next: stepKey(i + 1) }
         : { label: 'Ik ben klaar ✓', next: 'done' });
       if (i > 0) opts.push({ label: '← Vorige stap', next: stepKey(i - 1) });
+      if (i === 0) opts.push({ label: 'Ik heb al een account bij een broker', next: 'already' });
       opts.push({ label: 'Ik heb een vraag', next: 'help', returnTo: stepKey(i) });
       NODES[stepKey(i)] = {
         progress: `Stap ${i + 1} van ${STEPS.length}`,
