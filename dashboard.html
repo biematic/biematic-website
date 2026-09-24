@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Biematic — Acquisitie Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --bg: #0b0e14;
+    --panel: #131722;
+    --border: #232838;
+    --text: #e8eaf0;
+    --muted: #8b93a7;
+    --blue: #3b82f6;
+    --danger: #ef4444;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+  }
+  .wrap { max-width: 960px; margin: 0 auto; padding: 2rem 1.25rem 4rem; }
+  h1 { font-size: 1.4rem; margin-bottom: 0.25rem; }
+  .sub { color: var(--muted); font-size: 0.9rem; margin-bottom: 2rem; }
+
+  #login-screen { max-width: 360px; margin: 15vh auto 0; text-align: center; }
+  #login-screen input {
+    width: 100%; padding: 0.75rem 1rem; margin: 1rem 0 0.75rem;
+    background: var(--panel); border: 1px solid var(--border); border-radius: 8px;
+    color: var(--text); font-size: 1rem;
+  }
+  #login-screen button {
+    width: 100%; padding: 0.75rem 1rem; border: 0; border-radius: 8px;
+    background: var(--blue); color: white; font-size: 1rem; cursor: pointer;
+  }
+  #login-error { color: var(--danger); font-size: 0.85rem; margin-top: 0.5rem; min-height: 1.2em; }
+
+  #dashboard { display: none; }
+
+  .metacopier-link {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    background: var(--panel); border: 1px solid var(--border); border-radius: 8px;
+    padding: 0.65rem 1.1rem; color: var(--text); text-decoration: none;
+    font-size: 0.9rem; margin-bottom: 2rem;
+  }
+  .metacopier-link:hover { border-color: var(--blue); }
+
+  .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+  .kpi-card { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 1.1rem 1.25rem; }
+  .kpi-card .label { color: var(--muted); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.03em; }
+  .kpi-card .value { font-size: 1.8rem; font-weight: 700; margin-top: 0.35rem; }
+  .kpi-card .note { color: var(--muted); font-size: 0.75rem; margin-top: 0.25rem; }
+
+  .panel { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 1.25rem; margin-bottom: 1.5rem; }
+  .panel h2 { font-size: 1rem; margin: 0 0 1rem; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+  th, td { text-align: left; padding: 0.5rem 0.6rem; border-bottom: 1px solid var(--border); }
+  th { color: var(--muted); font-weight: 500; font-size: 0.75rem; text-transform: uppercase; }
+  .badge { display: inline-block; padding: 0.15rem 0.5rem; border-radius: 6px; font-size: 0.72rem; }
+  .badge.broker { background: rgba(59,130,246,0.15); color: #93c5fd; }
+  .badge.metacopier { background: rgba(34,197,94,0.15); color: #86efac; }
+
+  #loading, #empty { color: var(--muted); text-align: center; padding: 2rem; }
+</style>
+</head>
+<body>
+
+<div id="login-screen">
+  <h1>Biematic Dashboard</h1>
+  <p class="sub">Alleen voor intern gebruik</p>
+  <input type="password" id="password-input" placeholder="Wachtwoord" autocomplete="current-password">
+  <button id="login-btn">Inloggen</button>
+  <div id="login-error"></div>
+</div>
+
+<div class="wrap" id="dashboard">
+  <h1>Acquisitie Dashboard</h1>
+  <p class="sub">Broker- en MetaCopier-kliks vanaf de Biematic-website</p>
+
+  <a class="metacopier-link" href="https://affiliates.metacopier.io" target="_blank" rel="noopener">
+    Bekijk MetaCopier leads &amp; trial-status →
+  </a>
+
+  <div id="loading">Data laden…</div>
+
+  <div id="content" style="display:none;">
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="label">Totaal broker-kliks</div>
+        <div class="value" id="kpi-total-broker">–</div>
+      </div>
+      <div class="kpi-card">
+        <div class="label">MetaCopier-doorkliks</div>
+        <div class="value" id="kpi-total-metacopier">–</div>
+      </div>
+      <div class="kpi-card">
+        <div class="label">Conversie broker → MetaCopier</div>
+        <div class="value" id="kpi-conversion">–</div>
+        <div class="note">% van broker-kliks dat ook doorklikte</div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>Kliks per broker — meeste interesse (geen bevestigde aanmelding)</h2>
+      <canvas id="broker-chart" height="90"></canvas>
+    </div>
+
+    <div class="panel">
+      <h2>Laatste 50 events</h2>
+      <table>
+        <thead>
+          <tr><th>Tijdstip</th><th>Type</th><th>Broker</th><th>Referrer</th></tr>
+        </thead>
+        <tbody id="events-body"></tbody>
+      </table>
+      <div id="empty" style="display:none;">Nog geen events geregistreerd.</div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  const loginScreen = document.getElementById('login-screen');
+  const dashboard = document.getElementById('dashboard');
+  const passwordInput = document.getElementById('password-input');
+  const loginBtn = document.getElementById('login-btn');
+  const loginError = document.getElementById('login-error');
+
+  async function tryLoad(password) {
+    loginError.textContent = '';
+    try {
+      const res = await fetch('/.netlify/functions/dashboard-data', {
+        headers: { 'x-dashboard-password': password },
+      });
+      if (res.status === 401) {
+        loginError.textContent = 'Onjuist wachtwoord.';
+        return;
+      }
+      if (!res.ok) {
+        loginError.textContent = 'Er ging iets mis bij het laden van de data.';
+        return;
+      }
+      const data = await res.json();
+      sessionStorage.setItem('biematic_dashboard_pw', password);
+      loginScreen.style.display = 'none';
+      dashboard.style.display = 'block';
+      renderDashboard(data);
+    } catch (e) {
+      loginError.textContent = 'Kon geen verbinding maken.';
+    }
+  }
+
+  function renderDashboard(data) {
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('content').style.display = 'block';
+
+    document.getElementById('kpi-total-broker').textContent = data.totalBrokerClicks;
+    document.getElementById('kpi-total-metacopier').textContent = data.totalMetacopierClicks;
+    document.getElementById('kpi-conversion').textContent = data.conversionRate + '%';
+
+    const brokerLabels = Object.keys(data.clicksPerBroker);
+    const brokerValues = Object.values(data.clicksPerBroker);
+
+    new Chart(document.getElementById('broker-chart'), {
+      type: 'bar',
+      data: {
+        labels: brokerLabels.length ? brokerLabels : ['Nog geen data'],
+        datasets: [{
+          label: 'Kliks',
+          data: brokerValues.length ? brokerValues : [0],
+          backgroundColor: '#3b82f6',
+          borderRadius: 6,
+        }],
+      },
+      options: {
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { grid: { display: false }, ticks: { color: '#8b93a7' } },
+          y: { beginAtZero: true, ticks: { color: '#8b93a7', precision: 0 } },
+        },
+      },
+    });
+
+    const tbody = document.getElementById('events-body');
+    if (!data.recentEvents.length) {
+      document.getElementById('empty').style.display = 'block';
+    } else {
+      data.recentEvents.forEach((e) => {
+        const tr = document.createElement('tr');
+        const date = new Date(e.created_at).toLocaleString('nl-NL');
+        tr.innerHTML = `
+          <td>${date}</td>
+          <td><span class="badge ${e.event_type}">${e.event_type}</span></td>
+          <td>${e.broker || '—'}</td>
+          <td>${e.referrer || '—'}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+  }
+
+  loginBtn.addEventListener('click', () => tryLoad(passwordInput.value));
+  passwordInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') tryLoad(passwordInput.value);
+  });
+
+  const savedPw = sessionStorage.getItem('biematic_dashboard_pw');
+  if (savedPw) tryLoad(savedPw);
+})();
+</script>
+
+</body>
+</html>
