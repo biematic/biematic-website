@@ -32,7 +32,8 @@ exports.handler = async (event) => {
   });
 
   if (error) {
-    return { statusCode: 500, body: 'Failed to store event' };
+    console.error('Supabase insert failed:', JSON.stringify(error));
+    return { statusCode: 500, body: 'Failed to store event: ' + error.message };
   }
 
   return { statusCode: 204, body: '' };

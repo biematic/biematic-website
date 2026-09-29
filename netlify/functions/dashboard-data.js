@@ -19,7 +19,8 @@ exports.handler = async (event) => {
     .limit(2000);
 
   if (error) {
-    return { statusCode: 500, body: 'Failed to load data' };
+    console.error('Supabase query failed:', JSON.stringify(error));
+    return { statusCode: 500, body: 'Failed to load data: ' + error.message };
   }
 
   const brokerEvents = data.filter((e) => e.event_type === 'broker');
