@@ -20,3 +20,11 @@ create index if not exists click_events_created_at_idx on click_events (created_
 -- service role key gebruiken (die negeert RLS sowieso, maar dit is de
 -- veilige default mocht de anon key ooit per ongeluk gebruikt worden).
 alter table click_events enable row level security;
+
+-- Als "Automatically expose new tables" uitstond bij het aanmaken van het
+-- project, heeft ook de service_role (gebruikt door de Netlify Functions)
+-- geen rechten op deze tabel. Deze grants zijn nodig zodat de Functions
+-- kunnen lezen/schrijven; de tabel blijft afgeschermd voor de publieke
+-- anon-rol.
+grant usage on schema public to service_role;
+grant select, insert, update, delete on public.click_events to service_role;
